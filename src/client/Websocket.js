@@ -12,6 +12,9 @@ class WebSocket extends EventEmitter {
             ws: {
                 baseURL: 'wss://gateway.discord.gg/?v=6&encoding=etf'
             },
+            http: {
+                baseURL: 'https://discord.com/api/v6'
+            }
         }, options);
 
         this.token;
@@ -42,12 +45,16 @@ class WebSocket extends EventEmitter {
             this.sequence = json.s;
 
             switch(json.op) {
+                case 0:
+                    this.emit(json.t, json.d);
+                    break;
                 case 10:
                     // save heartbeat
                     this.heartbeat = json.d.heartbeat_interval;
 
                     // send heartbeat
                     setTimeout(() => {
+                        console.log('heartbeat', this.heartbeat);
                         this.ws.send(erlpack.pack({
                             op: 1,
                             d: this.sequence,
@@ -60,7 +67,7 @@ class WebSocket extends EventEmitter {
                                 this.connect(this.token);
                             } else this.ack = false;
                         }, 15000);
-                    });
+                    }, this.heartbeat);
 
                     // indentifation
                     this.ws.send(erlpack.pack({
@@ -72,6 +79,7 @@ class WebSocket extends EventEmitter {
                                 $browser: 'Ohorime core',
                                 $device: 'Ohorime core',
                             },
+                            intents: 1 << 0
                         },
                     }));
                     break;

@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.20.0",
     "erlpack": "github:discord/erlpack",
     "ws": "^7.3.1"
   }
