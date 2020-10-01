@@ -28,6 +28,7 @@ class WebSocket extends EventEmitter {
 
     connect(token) {
         if (!token || token == '') throw Error('Invalid token');
+        this.token = token;
 
         this.ws = new WebSocketClient(this.options.ws.baseURL);
 
@@ -46,7 +47,7 @@ class WebSocket extends EventEmitter {
 
             switch(json.op) {
                 case 0:
-                    this.emit(json.t, json.d);
+                    //this.emit(json.t, json.d);
                     break;
                 case 10:
                     // save heartbeat

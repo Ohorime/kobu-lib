@@ -10,3 +10,5 @@ class GuildCreate {
 
     };
 };
+
+module.exports = GuildCreate;
