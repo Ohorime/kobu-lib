@@ -10,3 +10,5 @@ class AuditLogNode {
         return await this.client.instance.get(`/guilds/${id}/audit-logs`, {params: options});
     };
 };
+
+module.exports = AuditLogNode;
