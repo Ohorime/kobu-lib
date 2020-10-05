@@ -1,198 +1,165 @@
 'use strict';
 
-const Guild = require('./../structures/Guild');
-const Role = require('./../structures/Roles');;
-const Channel = require('./../structures/Channel')
-
 class GuildNode {
-    constructor(client) {
+    constructor(client, guildID) {
         this.client = client;
+        this.guildID = guildID;
     };
 
-    /**
-     * Create a new guild
-     * @param {string} name 
-     * @param {{}} options 
-     */
-
-    async create(name, options) {
-        if (typeof name !== 'string') throw Error('Name is not a string');
-        if (options && (typeof options !== 'object' || Array.isArray(options))) throw Error('Options is not an object');
-        if (!Object.isExtensible(options)) {
-            let rem = {};
-            for (const [key, value] of Object.entries(options)) rem[key] = value;
-            options = rem;
-        };
-        if (Array.isArray(options.roles)) {
-            options.roles = options.roles.map((role) => role instanceof Role ? role.toJSON() : role);
-        };
-        if (Array.isArray(options.channels)) {
-            options.channels = options.channels.map((channel) => channel instanceof Channel ? channel.toJSON() : channel);
-        };
-        options.name = name;
-        let req = await this.client.instance.post('/guilds', {data: options})
-            .then((response) => response).catch((e) => e.response);
-
-        if (req.status < 200 || req.status >= 400) throw Error(req.data);
-    
-        return req.data;
+    async create(options) {
+        return await this.client.instance.post('/guilds', {data: options});
     };
 
-    async get(id, with_counts) {
-        if (!id || typeof id !== 'string' || typeof id !== 'number') throw Error('Invalid ID');
-
-        const req = await this.client.instance.get(`/guilds/${id}`, {
-            params: {with_counts},
-        }).then((response) => response).catch((e) => e.response);
-
-        if (req.status < 200 || req.status >= 400) throw Error(req.data);
-
-        return req.data;
+    async get(id = this.guildID, with_counts) {
+        return await this.client.instance.get(`/guilds/${id}`, {params: {with_counts}});
     };
 
-    async getPreview(id) {
-        if (!id || typeof id !== 'string' || typeof id !== 'number') throw Error('Invalid ID');
-
-        const req = await this.client.instance.get(`/guilds/${id}/preview`)
-            .then((response) => response).catch((e) => e.response);
- 
-        if (req.status < 200 || req.status >= 400) throw Error(req.data);
-
-        return req.data;
+    async getPreview(id = this.guildID) {
+        return await this.client.instance.get(`/guilds/${id}/preview`);
     };
 
-    async modify(id, options) {
-        if (!id || typeof id !== 'string' || typeof id !== 'number') throw Error('Invalid ID');
-        if (options && (typeof options !== 'object' || Array.isArray(options))) throw Error('Options is not an object');
-
-        const req = await this.client.instance.patch(`/guilds/${id}`, {data: options})
-            .then((response) => response).catch((e) => e.response);;
-
-        if (req.status < 200 || req.status >= 400) throw Error(req.data);
-
-        return req.data;
+    async modify(id = this.guildID, options) {
+        return await this.client.instance.patch(`/guilds/${id}`, {data: options});
     };
 
-    async delete(id) {
-        if (!id || typeof id !== 'string' || typeof id !== 'number') throw Error('Invalid ID');
-
-        const req = await this.client.instance.delete(`/guilds/${id}`)
-            .then((response) => response).catch((e) => e.response);
-
-        if (req.status != 204) {
-            return false;
-        } else {            
-            return true;
-        };
+    async delete(id = this.guildID) {
+        return await this.client.instance.delete(`/guilds/${id}`);
     };
 
-    async channels(id) {
-        if (!id || typeof id !== 'string' || typeof id !== 'number') throw Error('Invalid ID');
-
-        const req = await this.client.instance.get(`/guilds/${id}/channels`, {data: options})
-            .then((response) => response).catch((e) => e.response);;
-
-        if (req.status < 200 || req.status >= 400) throw Error(req.data);
-
-        return req.data;
+    async channels(id = this.guildID) {
+        return await this.client.instance.get(`/guilds/${id}/channels`);
     };
 
-    async createChannel(id, name, options) {
-        if (!id || typeof id !== 'string' || typeof id !== 'number') throw Error('Invalid ID');
-        if (!name || typeof name !== 'string' || typeof name !== 'number') throw Error('Invalid ID');
-        if (options && (typeof options !== 'object' || Array.isArray(options))) options = {};
-
-        options.name = name;
-
-        const req = await this.client.instance.post(`/guilds/${id}/channels`, {data: options})
-            .then((response) => response).catch((e) => e.response);
-
-        if (req.status < 200 || req.status >= 400) throw Error(req.data);
-
-        return req.data;
+    async createChannel(id = this.guildID, options) {
+        return await this.client.instance.post(`/guilds/${id}/channels`, {data: options})
     };
 
-    async modifyChannelPosition(id, options) {
-        if (!id || typeof id !== 'string' || typeof id !== 'number') throw Error('Invalid ID');
-        if (options && (typeof options !== 'object' || Array.isArray(options))) options = {};
-
-        const req = await this.client.instance.patch(`/guilds/${id}/channels`, {data: options})
-            .then((response) => response).catch((e) => e.response);
-
-        if (req.status != 204) return false;
-        else return true;
+    async modifyChannelPosition(id = this.guildID, options) {
+        return await this.client.instance.patch(`/guilds/${id}/channels`, {data: options});
     };
 
-    async getMember(guildID, userID) {
-        if (!guildID || typeof guildID !== 'string' || typeof guildID !== 'number') throw Error('Invalid ID');
-        if (!userID || typeof userID !== 'string' || typeof userID !== 'number') throw Error('Invalid ID');
-        if (options && (typeof options !== 'object' || Array.isArray(options))) options = {};
-
-        const req = await this.client.instance.get(`/guilds/${guildID}/members/${userID}`)
-            .then((response) => response).catch((e) => e.response);
-
-        if (req.status < 200 || req.status >= 400) throw Error(req.data);
-
-        return req.data;
+    async getMember(guildID = this.guildID, userID) {
+        return await this.client.instance.get(`/guilds/${guildID}/members/${userID}`);
     };
 
-    async getMembers(id, options) {
-        if (!id || typeof id !== 'string' || typeof id !== 'number') throw Error('Invalid ID');
-        if (options && (typeof options !== 'object' || Array.isArray(options))) options = {};
-
-        const req = await this.client.instance.get(`/guilds/${id}/members`, {params: options})
-            .then((response) => response).catch((e) => e.response);
-        
-        if (req.status < 200 || req.status >= 400) throw Error(req.data);
-
-        return req.data;
+    async getMembers(id = this.guildID, options) {
+        return await this.client.instance.get(`/guilds/${id}/members`, {params: options});
     };
 
-    async addMember(guildID, userID, access_token, options) {
-        if (!guildID || typeof guildID !== 'string' || typeof guildID !== 'number') throw Error('Invalid ID');
-        if (!userID || typeof userID !== 'string' || typeof userID !== 'number') throw Error('Invalid ID');
-        if (!access_token || typeof access_token !== 'string' || typeof access_token !== 'number') throw Error('Invalid ID');
-        if (options && (typeof options !== 'object' || Array.isArray(options))) options = {access_token};
-
-        const req = await this.client.instance.put(`/guilds/${guildID}/members/${userID}`, {data: options})
-            .then((response) => response).catch((e) => e.response);
-        
-        if (req.status < 200 || req.status >= 400) throw Error(req.data);
-
-        return req.data;
+    async addMember(guildID = this.guildID, userID, options) {
+        return await this.client.instance.put(`/guilds/${guildID}/members/${userID}`, {data: options})
     };
 
-    async modifyMember(guildID, userID, options) {
-        if (!guildID || typeof guildID !== 'string' || typeof guildID !== 'number') throw Error('Invalid ID');
-        if (!userID || typeof userID !== 'string' || typeof userID !== 'number') throw Error('Invalid ID');
-        if (options && (typeof options !== 'object' || Array.isArray(options))) options = {};
-
-        const req = await this.client.instance.patch(`/guilds/${guildID}/members/${userID}`, {data: options})
-            .then((response) => response).catch((e) => e.response);
-        
-        if (req.status != 204) return false;
-        else true;
+    async modifyMember(guildID = this.guildID, userID, options) {
+        return await this.client.instance.patch(`/guilds/${guildID}/members/${userID}`, {data: options});
     };
 
-    async modifyCurrentUserNick(id, options) {
-        if (!id || typeof id !== 'string' || typeof id !== 'number') throw Error('Invalid ID');
-        if (options && (typeof options !== 'object' || Array.isArray(options))) options = {};
-
-        const req = await this.client.instance.patch(`/guilds/${id}/members/@me/nick`, {params: options})
-            .then((response) => response).catch((e) => e.response);
-
-        if (req.status < 200 || req.status >= 400) throw Error(req.data);
-
-        return req.data;
+    async modifyCurrentUserNick(id = this.guildID, options) {
+        return await this.client.instance.patch(`/guilds/${id}/members/@me/nick`, {params: options});
     };
 
-    async addMemberRole(guildID, userID, roleID) {
-        if (!guildID || typeof guildID !== 'string' || typeof guildID !== 'number') throw Error('Invalid ID');
-        if (!userID || typeof userID !== 'string' || typeof userID !== 'number') throw Error('Invalid ID');
-        if (!roleID || typeof roleID !== 'string' || typeof roleID !== 'number') throw Error('Invalid ID');
+    async addMemberRole(guildID = this.guildID, userID, roleID) {
+        return await this.client.instance.put(`/guilds/${guildID}/members/${userID}/roles/${roleID}`);
+    };
 
-        const req = await this.client.instance.put(`/guilds/${guildID}/members/${userID}/roles/${roleID}`)
+    async removeMemberRole(guildID = this.guildID, userID, roleID) {
+        return await this.client.instance.delete(`/guilds/${guildID}/members/${userID}/roles/${roleID}`);
+    };
 
+    async removeMember(guildID = this.guildID, userID) {
+        return await this.client.instance.delete(`/guilds/${guildID}/members/${userID}`);
+    };
+
+    async getBans(id = this.guildID) {
+        return await this.client.instance.get(`/guilds/${id}/bans`);
+    };
+
+    async getBan(guildID = this.guildID, userID) {
+        return await this.client.instance.get(`/guilds/${guildID}/bans/${userID}`);
+    };
+
+    async createBan(guildID = this.guildID, userID, options) {
+        return await this.client.instance.put(`/guilds/${guildID}/bans/${userID}`, {data: options});
+    };
+
+    async removeBan(guildID = this.guildID, userID) {
+        return await this.client.instance.delete(`/guilds/${guildID}/bans/${userID}`);
+    };
+
+    async getRoles(id = this.guildID) {
+        return await this.client.instance.get(`/guilds/${id}/roles`);
+    };
+
+    async createRole(id = this.guildID, options) {
+        return await this.client.instance.post(`/guilds/${id}/roles`, {data: options});
+    };
+
+    async modifyRolePosition(id = this.guildID, options) {
+        return await this.client.instance.patch(`/guilds/${id}/roles`, {data: options});
+    };
+
+    async modifyRole(guildID = this.guildID, roleID, options) {
+        return await this.client.instance.path(`/guilds/${guildID}/roles/${roleID}`, {data: options});
+    };
+
+    async deleteRole(guildID = this.guildID, roleID) {
+        return await this.client.instance.delete(`/guilds/${guildID}/roles/${roleID}`);
+    };
+
+    async getPruneCount(id = this.guildID, options) {
+        return await this.client.instance.get(`/guilds/${id}/prune`, {params: options});
+    };
+
+    async beginPrune(id = this.guildID, options) {
+        return await this.client.instance.post(`/guilds/${id}/prune`, {data: options});
+    };
+
+    async getVoiceRegion(id = this.guildID) {
+        return await this.client.instance.get(`/guilds/${id}/regions`);
+    };
+
+    async getInvite(id = this.guildID) {
+        return await this.client.instance.get(`/guilds/${id}/invites`);
+    };
+
+    async getIntegrations(id = this.guildID) {
+        return await this.client.instance.get(`/guilds/${id}/integrations`);
+    };
+
+    async createIntegration(id = this.guildID, options) {
+        return await this.client.instance.post(`/guilds/${id}/integrations`, {data: options});
+    };
+
+    async modifyIntegration(guildID = this.guildID, integrationID, options) {
+        return await this.client.instance.patch(`/guilds/${guildID}/integrations/${integrationID}`, {data: options});
+    };
+
+    async deleteIntegration(guildID = this.guildID, integrationID) {
+        return await this.client.instance.delete(`/guilds/${guildID}/integrations/${integrationID}`);
+    };
+
+    async syncIntegration(guildID = this.guildID, integrationID) {
+        return await this.client.instance.post(`/guilds/${guildID}/integrations/${integrationID}/sync`);
+    };
+
+    async getWidgetSettings(id = this.guildID) {
+        return await this.client.instance.get(`/guilds/${id}/widget`);
+    };
+
+    async modifyWidget(id = this.guildID, options) {
+        return await this.client.instance.patch(`/guilds/${id}/widget`, {data: options});
+    };
+
+    async getWidget(id = this.guildID) {
+        return await this.client.instance.get(`/guilds/${id}/widget.json`);
+    };
+
+    async getVanityURL(id = this.guildID) {
+        return await this.client.instance.get(`/guilds/${id}/vanity-url`);
+    };
+
+    async getWidgetImage(id = this.guildID, options) {
+        return await this.client.instance.get(`guilds/${id}/widget.png`, {params: options});
     };
 };
 
