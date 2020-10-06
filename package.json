@@ -4,7 +4,9 @@
   "description": "Discord librairy for Ohorime",
   "main": "index.js",
   "scripts": {
-    "test": "node test/index.test"
+    "test": "node test/index.test",
+    "postinstall": "script/install",
+    "ci": "npx eslint --fix && npx eslint"
   },
   "keywords": [],
   "author": "shaynlink (me@shaynlink.fr)",
