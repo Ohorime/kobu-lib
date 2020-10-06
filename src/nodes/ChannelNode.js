@@ -27,7 +27,7 @@ class ChannelNode {
     };
 
     async createMessage(id = this.channelID, options, content_type = 'application/json') {
-        return await this.client.instance.post(`/channels/${id}/messages`, {data: options, headers: {'Content-type': content_type}});
+        return await this.client.instance.post(`/channels/${id}/messages`, options);
     };
 
     async crosspotMessage(channelID = this.channelID, messageID) {

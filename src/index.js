@@ -1,16 +1,26 @@
 'use strict';
 
-const Client = require('./client/Client');
-const client = new Client();
-const {readdirSync} = require('fs');
+module.exports = {
+  // Client
+  Client: require('./client/Client'),
+  WebSocket: require('./client/Websocket'),
 
-client.on('raw', console.log);
+  // Nodes
+  AuditLogNode: require('./nodes/AuditLogNode'),
+  ChannelNode: require('./nodes/ChannelNode'),
+  EmojiNode: require('./nodes/EmojiNode'),
+  GuildNode: require('./nodes/GuildNode'),
+  InviteNode: require('./nodes/InviteNode'),
+  UserNode: require('./nodes/UserNode'),
+  VoiceNode: require('./nodes/VoiceNode'),
+  WebhookNode: require('./nodes/WebhookNode'),
 
-for (const file of readdirSync('./src/events', {encoding: 'utf8'})) {
-  const Event = require('./events/' + file);
-  const event = new Event(client);
+  // Structures
+  ClientUser: require('./structures/ClientUser'),
+  Guild: require('./structures/Guild'),
+  User: require('./structures/User'),
 
-  client.on(event.name, (...args) => event.handle(...args));
+  // Util
+  Constants: require('./util/Constants'),
+  Util: require('./util/Util'),
 };
-
-client.connect(require('./../config').token);

@@ -13,12 +13,12 @@
  */
 const defaultOptions = {
     ws: {
-        baseURL: 'wss://gateway.discord.gg/?v=6&encoding=etf',
-        intents: 0 << 1,
+        baseURL: 'wss://gateway.discord.gg/?v=6',
     },
     http: {
         baseURL: 'https://discord.com/api/v6'
     },
+    intents: 1 << 0,
 };
 
 module.exports = {

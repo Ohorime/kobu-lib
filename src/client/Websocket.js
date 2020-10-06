@@ -2,9 +2,15 @@
 
 const { EventEmitter } = require('events');
 const WebSocketClient = require('ws');
-const erlpack = require('erlpack');
 const { concat } = require('./../util/Util');
 const { defaultOptions } = require('./../util/Constants');
+const axios = require('axios');
+
+let erlpack;
+
+try {
+    erlpack = require('erlpack');
+} catch (error) {};
 
 class WebSocket extends EventEmitter {
     /**
@@ -37,6 +43,23 @@ class WebSocket extends EventEmitter {
          * @type {boolean}
          */
         this.ack = false;
+        /**
+         * @type {string}
+         */
+        this.session_id = null;
+        /**
+         * @type {number}
+         */
+        this.ping = null;
+        /**
+         * @type {number}
+         */
+        this.lastSend = null;
+
+        /**
+         * @type {axios.AxiosInstance}
+         */
+        this.instance = null;
     };
 
     /**
@@ -48,13 +71,30 @@ class WebSocket extends EventEmitter {
         if (!token || token == '') throw Error('Invalid token');
         // Save token
         this.token = token;
+        this.instance = axios.create({
+            baseURL: this.options.http.baseURL,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bot ${this.token}`,
+            },
+            withCredentials: true,
+        });
 
         // Connect to Discord WebSocket
-        this.ws = new WebSocketClient(this.options.ws.baseURL);
+        this.ws = new WebSocketClient(`${this.options.ws.baseURL}&encoding=${erlpack ? 'etf' : 'json'}`);
 
         // Log close and error event
         this.ws.on('close', (...args) => console.log('event close', ...args));
         this.ws.on('error', (...args) => console.log('event error', ...args));
+
+        // if has not erlpack
+        if (!erlpack) {
+            console.warn(`erlpack undetected !`);
+            erlpack = {
+                unpack: JSON.parse,
+                pack: JSON.stringify,
+            };
+        };
 
         // Listen event message
         this.ws.on('message', (message) => {
@@ -69,6 +109,7 @@ class WebSocket extends EventEmitter {
 
             switch(json.op) {
                 case 0:
+                    if (json.t === 'READY') this.session_id = json.d.user.session_id;
                     // Emit every event
                     this.emit(json.t, json.d);
                     break;
@@ -77,7 +118,9 @@ class WebSocket extends EventEmitter {
                     this.heartbeat = json.d.heartbeat_interval;
 
                     // send heartbeat
-                    setTimeout(() => {
+                    setInterval(() => {
+                        // Save date
+                        this.lastSend = Date.now();
                         // log heartbeat
                         console.log('heartbeat %s', this.heartbeat);
                         // Send heartbeat
@@ -111,13 +154,16 @@ class WebSocket extends EventEmitter {
                                 $browser: 'Ohorime core',
                                 $device: 'Ohorime core',
                             },
-                            intents: this.config.ws.intents,
+                            intents: this.options.intents,
                         },
                     }));
                     break;
                 case 11:
                     // set ack for true
                     this.ack = true;
+                    // set ping
+                    this.ping = Date.now() - this.lastSend;
+                    this.emit('ping', this.ping);
                     break;
             };
         });

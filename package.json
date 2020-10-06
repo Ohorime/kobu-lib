@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "axios": "^0.20.0",
+    "discord.js": "^12.3.1",
     "erlpack": "github:discord/erlpack",
     "ws": "^7.3.1"
   },
