@@ -5,13 +5,6 @@ const Role = require('./Role');
 const Emoji = require('./Emoji');
 const Member = require('./Member');
 const Channel = require('./Channel');
-const TextChannel = require('./TextChannel');
-const DmChannel = require('./DmChannel');
-const GuildVoiceChannel = require('./GuildVoiceChannel');
-const GroupDmChannel = require('./GroupDmChannel');
-const GuildCategoryChannel = require('./GuildCategoryChannel');
-const GuildNewsChannel = require('./GuildNewsChannel');
-const GuildStoreChannel = require('./GuildStore');
 
 class Guild {
     constructor(client, data) {
@@ -53,34 +46,7 @@ class Guild {
         this.members = new Map();
         data.members.forEach((member) => this.members.set(member.id, new Member(client, member)));
         this.channels = new Map();
-        data.channels.forEach((channel) => {
-            switch (channel.type) {
-                case 0:
-                    this.channels.set(channel.id, new TextChannel(client, channel));
-                    break;
-                case 1:
-                    this.channel.set(channel.id, new DmChannel(client, channel));
-                    break;
-                case 2:
-                    this.channels.set(channel.id, new GuildVoiceChannel(client, channel));
-                    break;
-                case 3:
-                    this.channel.set(channel.id, new GroupDmChannel(client, channel));
-                    break;
-                case 4:
-                    this.channels.set(channel.id, new GuildCategoryChannel(client, channel));
-                    break;
-                case 5:
-                    this.channels.set(channel.id, new GuildNewsChannel(client, channel));
-                    break;
-                case 6:
-                    this.channels.set(channel.id, new GuildStoreChannel(client, channel));
-                    break;
-                default:
-                    this.channels.set(channel.id, new Channel(client, channel));
-                    break;
-            };
-        });
+        data.channels.forEach((channel) => this.channels.set(channel.id, new Channel(client, channel)));
         this.presences = data.presences;
         this.max_members = data.max_members;
         this.vanity_url_code = data.vanity_url_code;

@@ -3,12 +3,20 @@
 const WebSocket = require('./Websocket');
 const axios = require('axios');
 
+/**
+ * @extends WebSocket
+ */
 class Client extends WebSocket {
+    /**
+     * Options of Client
+     * @param {import('../util/Constants').DefaultOptions} options 
+     */
     constructor(options = {}) {
         super(options);
 
-        this.guilds = new Map();
-
+        /**
+         * @type {axios.AxiosInstance}
+         */
         this.instance = axios.create({
             baseURL: this.options.http.baseURL,
             headers: {
@@ -16,10 +24,6 @@ class Client extends WebSocket {
                 'Content-Type': 'application/json',
             },
         });
-    };
-
-    async createRequest() {
-
     };
 };
 
