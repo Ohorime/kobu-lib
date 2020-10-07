@@ -55,11 +55,6 @@ class WebSocket extends EventEmitter {
          * @type {number}
          */
         this.lastSend = null;
-
-        /**
-         * @type {axios.AxiosInstance}
-         */
-        this.instance = null;
     };
 
     /**
@@ -71,14 +66,6 @@ class WebSocket extends EventEmitter {
         if (!token || token == '') throw Error('Invalid token');
         // Save token
         this.token = token;
-        this.instance = axios.create({
-            baseURL: this.options.http.baseURL,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bot ${this.token}`,
-            },
-            withCredentials: true,
-        });
 
         // Connect to Discord WebSocket
         this.ws = new WebSocketClient(`${this.options.ws.baseURL}&encoding=${erlpack ? 'etf' : 'json'}`);
