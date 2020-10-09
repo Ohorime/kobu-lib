@@ -1,5 +1,53 @@
 'use strict';
 
+/**
+ * @typedef Guild
+ * 
+ * @property {string} id
+ * @property {string} name
+ * @property {string} icon
+ * @property {string} splash
+ * @property {string} discovery_splash
+ * @property {?boolean} owner
+ * @property {string} owner_id
+ * @property {?string} permissions
+ * @property {string} region
+ * @property {?string} afk_channel_id
+ * @property {number} afk_timeout
+ * @property {?boolean} widget_enabled
+ * @property {?string} widget_channel_id
+ * @property {number} verification_level
+ * @property {number} default_message_notifications
+ * @property {number} default_content_filter
+ * @property {number} explicit_content_filter
+ * @property {Role[]} roles
+ * @property {Emoji[]} emojis
+ * @property {Feature[]} features
+ * @property {number} mfa_level
+ * @property {string} application_id
+ * @property {string} system_channel_id
+ * @property {number} system_channel_flags
+ * @property {string} rules_channel_id
+ * @property {?number} joined_at
+ * @property {?boolean} large
+ * @property {?boolean} unavailable
+ * @property {?number} member_count
+ * @property {?VoiceState[]} voice_states
+ * @property {?Member[]} members
+ * @property {?Channel[]} channels
+ * @property {?Presence[]} presences
+ * @property {?number} max_members
+ * @property {?string} vanity_url_code
+ * @property {?string} description
+ * @property {?string} banner
+ * @property {?number} premium_tier
+ * @property {?number} premium_subscription_count
+ * @property {string} preferred_locale
+ * @property {?string} public_updates_channel_id
+ * @property {?number} max_video_channel_users
+ * @property {?number} approximate_presence_count
+ */
+
 class GuildNode {
     constructor(client, guildID) {
         this.client = client;

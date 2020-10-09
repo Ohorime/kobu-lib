@@ -23,3 +23,5 @@ class Channel {
         this.last_pin_timestamp = data.last_message_id;
     };
 };
+
+module.exports = Channel;

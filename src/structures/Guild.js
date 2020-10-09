@@ -1,10 +1,6 @@
 'use strict';
 
 const User = require('./User');
-//const Role = require('./Role');
-//const Emoji = require('./Emoji');
-//const Member = require('./Member');
-//const Channel = require('./Channel');
 
 class Guild {
     constructor(client, data) {
