@@ -27,7 +27,7 @@ class ChannelNode {
     /**
      * 
      * @param {import('./../client/Client')} client 
-     * @param {string} channelID 
+     * @param {?string} channelID 
      */
     constructor(client, channelID) {
         /**
@@ -35,7 +35,7 @@ class ChannelNode {
          */
         this.client = client;
         /**
-         * @type {string}
+         * @type {?string}
          */
         this.channelID = channelID;
     };
@@ -142,7 +142,7 @@ class ChannelNode {
     /**
      * Deletes another user's reaction. This endpoint requires the 'MANAGE_MESSAGES' permission to be present on the current user. Returns a 204 empty response on success. The emoji must be URL Encoded or the request will fail with 10014: Unknown Emoji.
      * @see https://discord.com/developers/docs/resources/channel#delete-user-reaction
-     * @param {string} channelID - Channel ID
+     * @param {string} [channelID=this.channelID] - Channel ID
      * @param {string} messageID - Message ID
      * @param {string} emoji  - emoji parsed
      * @param {string} userID - User ID
@@ -155,7 +155,7 @@ class ChannelNode {
     /**
      * Get a list of users that reacted with this emoji. Returns an array of user objects on success. The emoji must be URL Encoded or the request will fail with 10014: Unknown Emoji.
      * @see https://discord.com/developers/docs/resources/channel#get-reactions
-     * @param {string} channelID - Channel ID
+     * @param {string} [channelID=this.channelID] - Channel ID
      * @param {string} messageID - Message ID
      * @param {string} emoji - emoji parsed
      * @param {?{params: ?{before: ?string, after: ?string, limit: ?number}}} options - options
@@ -168,7 +168,7 @@ class ChannelNode {
     /**
      * Deletes all reactions on a message. This endpoint requires the 'MANAGE_MESSAGES' permission to be present on the current user. Fires a Message Reaction Remove All Gateway event.
      * @see https://discord.com/developers/docs/resources/channel#delete-all-reactions
-     * @param {string} channelID - Channel ID
+     * @param {string} [channelID=this.channelID] - Channel ID
      * @param {string} messageID - Message ID
      * @return {Promise<void>}
      */
@@ -179,7 +179,7 @@ class ChannelNode {
     /**
      * Deletes all the reactions for a given emoji on a message. This endpoint requires the MANAGE_MESSAGES permission to be present on the current user. Fires a Message Reaction Remove Emoji Gateway event. The emoji must be URL Encoded or the request will fail with 10014: Unknown Emoji.
      * @see https://discord.com/developers/docs/resources/channel#delete-all-reactions-for-emoji
-     * @param {string} channelID - Channel ID
+     * @param {string} [channelID=this.channelID] - Channel ID
      * @param {string} messageID - Message ID
      * @param {string} emoji - emoji parsed
      * @return {Promise<void>}
@@ -191,7 +191,7 @@ class ChannelNode {
     /**
      * Edit a previously sent message. The fields content, embed, allowed_mentions and flags can be edited by the original message author. Other users can only edit flags and only if they have the MANAGE_MESSAGES permission in the corresponding channel. When specifying flags, ensure to include all previously set flags/bits in addition to ones that you are modifying. Only flags documented in the table below may be modified by users (unsupported flag changes are currently ignored without error).
      * @see https://discord.com/developers/docs/resources/channel#edit-message
-     * @param {string} channelID - Channel ID
+     * @param {string} [channelID=this.channelID] - Channel ID
      * @param {string} messageID - Message ID
      * @param {?{data: ?{content: ?string, embed: ?Embed, flags: ?number}}} options - options
      * @return {Promise<Message>}
@@ -203,7 +203,7 @@ class ChannelNode {
     /**
      * Delete a message. If operating on a guild channel and trying to delete a message that was not sent by the current user, this endpoint requires the MANAGE_MESSAGES permission. Returns a 204 empty response on success. Fires a Message Delete Gateway event.
      * @see https://discord.com/developers/docs/resources/channel#delete-message
-     * @param {string} channelID - Channel ID
+     * @param {string} [channelID=this.channelID] - Channel ID
      * @param {string} messageID - Message ID
      * @return {Promise<void>}
      */
@@ -214,7 +214,7 @@ class ChannelNode {
     /**
      * Delete multiple messages in a single request. This endpoint can only be used on guild channels and requires the MANAGE_MESSAGES permission. Returns a 204 empty response on success. Fires a Message Delete Bulk Gateway event.
      * @see https://discord.com/developers/docs/resources/channel#bulk-delete-messages
-     * @param {string} channelID - Channel ID
+     * @param {string} [channelID=this.channelID] - Channel ID
      * @param {{data: {message: string[]}}} options - options
      * @return {Promise<void>}
      */
@@ -225,7 +225,7 @@ class ChannelNode {
     /**
      * Edit the channel permission overwrites for a user or role in a channel. Only usable for guild channels. Requires the MANAGE_ROLES permission. Returns a 204 empty response on success. For more information about permissions, see permissions.
      * @see https://discord.com/developers/docs/resources/channel#edit-channel-permissions
-     * @param {string} channelID - Channel ID
+     * @param {string} [channelID=this.channelID] - Channel ID
      * @param {string} overwriteID - Overwrite ID
      * @param {{data: {allow: string, deny: string, type: number}}} options - options
      * @return {Promise<void>}
@@ -237,7 +237,7 @@ class ChannelNode {
     /**
      * Returns a list of invite objects (with invite metadata) for the channel. Only usable for guild channels. Requires the MANAGE_CHANNELS permission.
      * @see https://discord.com/developers/docs/resources/channel#get-channel-invites
-     * @param {string} id - Channel ID
+     * @param {string} [id=this.channelID] - Channel ID
      * @return {Promise<Invite[]>}
      */
     async getInvites(id = this.channelID) {
@@ -247,7 +247,7 @@ class ChannelNode {
     /**
      * Create a new invite object for the channel. Only usable for guild channels. Requires the CREATE_INSTANT_INVITE permission. All JSON parameters for this route are optional, however the request body is not. If you are not sending any fields, you still have to send an empty JSON object ({}). Returns an invite object. Fires an Invite Create Gateway event.
      * @see https://discord.com/developers/docs/resources/channel#create-channel-invite
-     * @param {string} id - Channel ID
+     * @param {string} [id=this.channelID] - Channel ID
      * @param {?{data: {max_age: 86400, max_uses: 0, temporary: false, unique: false, target_user: ?string, target_user_type: number }}} options - options
      * @return {Promise<Invite>}
      */
@@ -258,7 +258,7 @@ class ChannelNode {
     /**
      * Delete a channel permission overwrite for a user or role in a channel. Only usable for guild channels. Requires the MANAGE_ROLES permission. Returns a 204 empty response on success. For more information about permissions, see permissions
      * @see https://discord.com/developers/docs/resources/channel#delete-channel-permission
-     * @param {string} channelID - Channel ID
+     * @param {string} [channelID=this.channelID] - Channel ID
      * @param {string} overwriteID - Overwrite ID
      * @return {Promise<void>}
      */
@@ -269,7 +269,7 @@ class ChannelNode {
     /**
      * Follow a News Channel to send messages to a target channel. Requires the MANAGE_WEBHOOKS permission in the target channel. Returns a followed channel object.
      * @see https://discord.com/developers/docs/resources/channel#follow-news-channel
-     * @param {string} id - Channel ID
+     * @param {string} [id=this.channelID] - Channel ID
      * @param {{data: {webhook_channel_id: string}}} options - options
      * @return {Promise<Channel>}
      */
@@ -280,7 +280,7 @@ class ChannelNode {
     /**
      * Post a typing indicator for the specified channel. Generally bots should not implement this route. However, if a bot is responding to a command and expects the computation to take a few seconds, this endpoint may be called to let the user know that the bot is processing their message. Returns a 204 empty response on success. Fires a Typing Start Gateway event.
      * @see https://discord.com/developers/docs/resources/channel#trigger-typing-indicator
-     * @param {string} id - Channel ID
+     * @param {string} [id=this.channelID] - Channel ID
      * @return {Promise<void>}
      */
     async TriggerTypingIndicator(id = this.channelID) {
@@ -290,7 +290,7 @@ class ChannelNode {
     /**
      * Returns all pinned messages in the channel as an array of message objects.
      * @see https://discord.com/developers/docs/resources/channel#get-pinned-messages
-     * @param {string} id - Channel ID
+     * @param {string} [id=this.channelID] - Channel ID
      * @return {Promise<Message[]>}
      */
     async getPinnedMessages(id = this.channelID) {
@@ -300,7 +300,7 @@ class ChannelNode {
     /**
      * Pin a message in a channel. Requires the MANAGE_MESSAGES permission. Returns a 204 empty response on success.
      * @see https://discord.com/developers/docs/resources/channel#add-pinned-channel-message
-     * @param {string} channelID - Channel ID
+     * @param {string} [channelID=this.channelID] - Channel ID
      * @param {string} messageID - Message ID
      * @return {Promise<void>}
      */
@@ -311,7 +311,7 @@ class ChannelNode {
     /**
      * Delete a pinned message in a channel. Requires the MANAGE_MESSAGES permission. Returns a 204 empty response on success.
      * @see https://discord.com/developers/docs/resources/channel#delete-pinned-channel-message
-     * @param {string} channelID - Channel ID
+     * @param {string} [channelID=this.channelID] - Channel ID
      * @param {string} messageID - Message ID
      * @return {Promise<void>}
      */
@@ -322,7 +322,7 @@ class ChannelNode {
     /**
      * Adds a recipient to a Group DM using their access token
      * @see https://discord.com/developers/docs/resources/channel#group-dm-add-recipient
-     * @param {string} channelID - Channel ID
+     * @param {string} [channelID=this.channelID] - Channel ID
      * @param {string} userID - User ID
      * @param {{data: {access_token: string, nick: string}}} options - options
      * @return {Promise<void>}
@@ -334,7 +334,7 @@ class ChannelNode {
     /**
      * Removes a recipient from a Group DM
      * @see https://discord.com/developers/docs/resources/channel#group-dm-remove-recipient
-     * @param {string} channelID - Channel ID
+     * @param {string} [channelID=this.channelID] - Channel ID
      * @param {string} userID - User ID
      * @return {Promise<void>}
      */

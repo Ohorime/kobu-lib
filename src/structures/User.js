@@ -1,6 +1,28 @@
 'use strict';
 
+/**
+ * @typedef UserObject
+ * 
+ * @property {string} id
+ * @property {string} username
+ * @property {string} discriminator
+ * @property {string} avatar
+ * @property {?boolean} bot
+ * @property {?boolean} system
+ * @property {?boolean} mfa_enabled
+ * @property {?string} locale
+ * @property {?boolean} verified
+ * @property {?string} email
+ * @property {?number} flags
+ * @property {?number} premium_type
+ * @property {?number} public_flags
+ */
+
 class User {
+    /** 
+     * @param {import('./../client/Client')} client - Client
+     * @param {UserObject} data - User
+     */
     constructor(client, data) {
         this.client = client;
 

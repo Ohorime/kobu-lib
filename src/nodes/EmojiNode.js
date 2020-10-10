@@ -17,8 +17,8 @@ class EmojiNode {
     /**
      * Constructor of EmojiNode
      * @param {import('./../client/Client')} client - Client
-     * @param {string} guildID - Guild ID
-     * @param {string} emojiID - Emoji ID
+     * @param {?string} guildID - Guild ID
+     * @param {?string} emojiID - Emoji ID
      */
     constructor(client, guildID, emojiID) {
         /**
@@ -26,11 +26,11 @@ class EmojiNode {
          */
         this.client = client;
         /**
-         * @type {string}
+         * @type {?string}
          */
         this.guildID = guildID;
         /**
-         * @type {string}
+         * @type {?string}
          */
         this.emojiID = emojiID;
     };
@@ -38,7 +38,7 @@ class EmojiNode {
     /**
      * Returns a list of emoji objects for the given guild.
      * @see https://discord.com/developers/docs/resources/emoji#list-guild-emojis
-     * @param {string} guildID - Guild ID
+     * @param {string} [guildID=this.guildID] - Guild ID
      * @return {Promise<Emoji[]>}
      */
     async listEmojis(guildID = this.guildID) {
@@ -48,7 +48,7 @@ class EmojiNode {
     /**
      * Returns an emoji object for the given guild and emoji IDs.
      * @see https://discord.com/developers/docs/resources/emoji#get-guild-emoji
-     * @param {string} guildID - Guild ID
+     * @param {string} [guildID=this.guildID] - Guild ID
      * @param {string} emojiID - Emoji ID
      * @return {Promise<Emoji>}
      */
@@ -59,7 +59,7 @@ class EmojiNode {
     /**
      * Create a new emoji for the guild. Requires the MANAGE_EMOJIS permission. Returns the new emoji object on success. Fires a Guild Emojis Update Gateway event.
      * @see https://discord.com/developers/docs/resources/emoji#create-guild-emoji
-     * @param {string} guildID - Guild ID
+     * @param {string} [guildID=this.guildID] - Guild ID
      * @param {{data: {name: string, image: string, roles: string[]}}} options - options
      * @return {Promise<Emoji>}
      */
@@ -70,8 +70,8 @@ class EmojiNode {
     /**
      * Modify the given emoji. Requires the MANAGE_EMOJIS permission. Returns the updated emoji object on success. Fires a Guild Emojis Update Gateway event.
      * @see https://discord.com/developers/docs/resources/emoji#modify-guild-emoji
-     * @param {string} guildID - Guild ID
-     * @param {string} emojiID - Emoji ID
+     * @param {string} [guildID=this.guildID] - Guild ID
+     * @param {string} [emojiID=this.guildID] - Emoji ID
      * @param {?{data: ?{name: ?string, roles: ?string[]}}} options - options
      * @return {Promise<Emoji>}
      */
@@ -82,8 +82,8 @@ class EmojiNode {
     /**
      * Delete the given emoji. Requires the MANAGE_EMOJIS permission. Returns 204 No Content on success. Fires a Guild Emojis Update Gateway event.
      * @see https://discord.com/developers/docs/resources/emoji#delete-guild-emoji
-     * @param {string} guildID - Guild ID
-     * @param {string} emojiID - Emoji ID
+     * @param {string} [guildID=this.guildID] - Guild ID
+     * @param {string} [emojiID=this.emojiID] - Emoji ID
      * @return {Promise<void>}
      */
     async deleteEmoji(guildID = this.guildID, emojiID = this.emojiID) {

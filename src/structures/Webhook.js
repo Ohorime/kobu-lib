@@ -1,6 +1,23 @@
 'use strict';
 
+/**
+ * @typedef WebhookObject
+ * 
+ * @property {string} id
+ * @property {number} type
+ * @property {?string} guild_id
+ * @property {string} channel_id
+ * @property {?User} user
+ * @property {string} name
+ * @property {string} avatar
+ * @property {?string} token
+ */
+
 class Webhook {
+    /**
+     * @param {import('./../client/Client')} client - Client
+     * @param {WebhookObject} data - Webhook
+     */
     constructor(client, data) {
         this.client = client;
 

@@ -1,6 +1,33 @@
 'use strict';
 
+/**
+ * @typedef ChannelObject
+ * 
+ * @property {string} id
+ * @property {number} type
+ * @property {?string} guild_id
+ * @property {?number} position
+ * @property {?Overwrite[]} permission_overwrites
+ * @property {?string} name
+ * @property {?string} topic
+ * @property {?boolean} nfsw
+ * @property {?string} last_message_id
+ * @property {?number} bitrate
+ * @property {?number} user_limit
+ * @property {?number} rate_limit_per_user
+ * @property {?User[]} recipients
+ * @property {?string} icon
+ * @property {?string} owner_id
+ * @property {?string} application_id
+ * @property {?string} parent_id
+ * @property {?number} last_pin_timestamp
+ */
+
 class Channel {
+    /**
+     * @param {import('./../client/Client')} client - Client
+     * @param {ChannelObject} data - Channel
+     */
     constructor(client, data) {
         this.client = client;
         this.id = data.id;

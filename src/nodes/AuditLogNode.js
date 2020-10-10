@@ -13,7 +13,7 @@ class AuditLogNode {
     /**
      * 
      * @param {import('./../client/Client')} client 
-     * @param {string} guildID 
+     * @param {?string} guildID 
      */
     constructor(client, guildID) {
         /**
@@ -21,7 +21,7 @@ class AuditLogNode {
          */
         this.client = client;
         /**
-         * @type {string}
+         * @type {?string}
          */
         this.guildID = guildID;
     };
