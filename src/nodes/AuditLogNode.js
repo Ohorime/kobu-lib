@@ -30,7 +30,7 @@ class AuditLogNode {
      * Returns an audit log object for the guild. Requires the 'VIEW_AUDIT_LOG' permission.
      * @see https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log
      * @param {string} [id=this.guildID]
-     * @param {{user_id: string, action_type: number, before: string, limit: number}} options
+     * @param {{data: {user_id: string, action_type: number, before: string, limit: number}}} options
      * @return {Promise<AuditLog>}
      */
     async getAuditLog(id = this.guildID, options) {

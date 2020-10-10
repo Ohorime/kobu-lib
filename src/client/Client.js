@@ -15,11 +15,11 @@ class Client extends WebSocket {
         super(options);
 
         this.instance = {
-            get: (...args) => this.request('GET', ...args),
-            post: (...args) => this.request('POST', ...args),
-            patch: (...args) => this.request('PATCH', ...args),
-            put: (...args) => this.request('PUT', ...args),
-            delete: (...args) => this.request('DELETE', ...args),
+            get: (d) => this.request('GET', d),
+            post: (d) => this.request('POST', d),
+            patch: (d) => this.request('PATCH', d),
+            put: (d) => this.request('PUT', d),
+            delete: (d) => this.request('DELETE', d),
         };
     };
 
@@ -36,6 +36,7 @@ class Client extends WebSocket {
                 url,
                 method,
                 data: data.data,
+                params: data.params,
                 headers: Object.assign(data.headers, {
                     Authorization: `${data.bearer || 'Bot'} ${this.token}`,
                     'Content-Type': 'application/json',
