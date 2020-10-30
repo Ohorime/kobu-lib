@@ -12,9 +12,6 @@
  * @type {DefaultOptions}
  */
 const defaultOptions = {
-  ws: {
-    baseURL: 'wss://gateway.discord.gg/?v=8',
-  },
   http: {
     baseURL: 'https://discord.com/api/v8',
   },

@@ -34,12 +34,15 @@
   "homepage": "https://github.com/Ohorime",
   "readme": "./README.md",
   "dependencies": {
+    "@satont/text-utils": "^1.0.5",
     "axios": "^0.20.0",
     "erlpack": "github:discord/erlpack",
+    "i": "^0.3.6",
+    "npm": "^6.14.8",
     "ws": "^7.3.1"
   },
   "devDependencies": {
-    "eslint": "^7.10.0",
+    "eslint": "^7.12.1",
     "eslint-config-google": "^0.14.0"
   }
 }

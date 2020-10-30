@@ -4,6 +4,7 @@ module.exports = {
   // Client
   Client: require('./client/Client'),
   WebSocket: require('./client/Websocket'),
+  Cluster: require('./client/Cluster'),
 
   // version
   version: require('./../package.json').version,

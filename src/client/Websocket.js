@@ -4,12 +4,8 @@ const {EventEmitter} = require('events');
 const WebSocketClient = require('ws');
 const {concat} = require('./../util/Util');
 const {defaultOptions} = require('./../util/Constants');
-
-let erlpack;
-
-try {
-  erlpack = require('erlpack');
-} catch (error) {};
+const erlpack = require('erlpack');
+const axios = require('axios');
 
 /**
  * @extends EventEmitter
@@ -22,6 +18,11 @@ class WebSocket extends EventEmitter {
   constructor(options) {
     super();
     this.options = concat(defaultOptions, options);
+
+    /**
+     * @type {string}
+     */
+    this.wsURL;
 
     /**
          * @type {string}
@@ -63,28 +64,26 @@ class WebSocket extends EventEmitter {
      * Connect to Discord WebSocket
      * @param {string} token
      */
-  connect(token) {
+  async connect(token) {
     // Check if token is valid
     if (!token || token == '') throw Error('Invalid token');
     // Save token
     this.token = token;
 
+    // Fetch endpoint
+    this.wsURL = await this.getEndpoint();
+
+    this.emit('raw', `Ws url: ${this.wsURL}`);
+
+    console.log([process.env.shardID, process.env.shardCount]);
+
     // Connect to Discord WebSocket
     this.ws = new WebSocketClient(
-        `${this.options.ws.baseURL}&encoding=${erlpack ? 'etf' : 'json'}`);
+        `${this.wsURL}?v=8&encoding=etf`);
 
     // Log close and error event
     this.ws.on('close', (...args) => console.log('event close', ...args));
     this.ws.on('error', (...args) => console.log('event error', ...args));
-
-    // if has not erlpack
-    if (!erlpack) {
-      console.warn(`erlpack undetected !`);
-      erlpack = {
-        unpack: JSON.parse,
-        pack: JSON.stringify,
-      };
-    };
 
     // Listen event message
     this.ws.on('message', (message) => {
@@ -141,10 +140,17 @@ class WebSocket extends EventEmitter {
               token,
               properties: {
                 $os: require('os').platform(),
-                $browser: 'Ohorime core',
-                $device: 'Ohorime core',
+                $browser: 'kobu-lib',
+                $device: 'kobu-lib',
               },
               intents: this.options.intents,
+              compress: false,
+              large_threshold: 50,
+              guild_subscriptions: false,
+              shard: [
+                parseInt(process.env.shardID),
+                parseInt(process.env.shardCount),
+              ],
             },
           }));
           break;
@@ -157,6 +163,16 @@ class WebSocket extends EventEmitter {
           break;
       };
     });
+  };
+
+  /**
+   * get ws endpoint
+   */
+  async getEndpoint() {
+    return axios({
+      url: this.options.http.baseURL + '/gateway',
+      method: 'GET',
+    }).then((response) => response.data?.url);
   };
 };
 

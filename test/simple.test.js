@@ -39,6 +39,10 @@ client.on('MESSAGE_CREATE', async (message) => {
       },
     }).then(console.log).catch((e) => console.log(e));
   };
+
+  if (command === 'join') {
+    console.log(message);
+  };
 });
 
 client.connect(require('./config').token);
