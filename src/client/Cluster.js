@@ -26,6 +26,7 @@ class Cluster {
   /** */
   async spawn() {
     if (!cluster.isMaster) {
+      console.log(path.resolve(path.join(process.cwd(), this.file)));
       return require(path.resolve(path.join(process.cwd(), this.file)));
     };
     if (!Boolean(this.gateway)) {
