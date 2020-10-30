@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = {
+module.exports = exports = {
   // Client
   Client: require('./client/Client'),
   WebSocket: require('./client/Websocket'),

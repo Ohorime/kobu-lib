@@ -64,4 +64,4 @@ class Cluster {
   };
 };
 
-module.exports = Cluster;
+module.exports = exports = Cluster;
