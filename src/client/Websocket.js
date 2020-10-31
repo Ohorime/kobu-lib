@@ -75,8 +75,6 @@ class WebSocket extends EventEmitter {
 
     this.emit('raw', `Ws url: ${this.wsURL}`);
 
-    console.log([process.env.shardID, process.env.shardCount]);
-
     // Connect to Discord WebSocket
     this.ws = new WebSocketClient(
         `${this.wsURL}?v=8&encoding=etf`);
