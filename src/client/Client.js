@@ -41,7 +41,8 @@ class Client extends WebSocket {
           'Content-Type': 'application/json',
         }),
         withCredentials: true,
-      }).then((response) => response).catch(reject);
+      }).then((response) => response)
+      .catch((err) => reject(err));
 
       resolve({
         status: req.status,
