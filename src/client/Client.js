@@ -45,9 +45,9 @@ class Client extends WebSocket {
       .catch((err) => reject(err));
 
       resolve({
-        status: req.status,
-        data: req.data,
-        error: req.axiosError,
+        status: req?.status,
+        data: req?.data,
+        error: req?.axiosError,
         response: req,
       });
     });
