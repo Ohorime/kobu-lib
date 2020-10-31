@@ -108,8 +108,6 @@ class WebSocket extends EventEmitter {
           setInterval(() => {
             // Save date
             this.lastSend = Date.now();
-            // log heartbeat
-            console.log('heartbeat %s', this.heartbeat);
             // Send heartbeat
             this.ws.send(erlpack.pack({
               op: 1,
