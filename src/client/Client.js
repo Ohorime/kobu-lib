@@ -14,11 +14,11 @@ class Client extends WebSocket {
     super(options);
 
     this.instance = {
-      get: (d) => this.request('GET', d),
-      post: (d) => this.request('POST', d),
-      patch: (d) => this.request('PATCH', d),
-      put: (d) => this.request('PUT', d),
-      delete: (d) => this.request('DELETE', d),
+      get: (...d) => this.request('GET', ...d),
+      post: (...d) => this.request('POST', ...d),
+      patch: (...d) => this.request('PATCH', ...d),
+      put: (...d) => this.request('PUT', ...d),
+      delete: (...d) => this.request('DELETE', ...d),
     };
   };
 
@@ -31,18 +31,17 @@ class Client extends WebSocket {
      */
   request(method, url, data) {
     return new Promise(async (resolve, reject) => {
-      console.log(method, url, data);
       const req = await axios({
-        url,
+        url: `${this.options.http.baseURL}${url}`,
         method,
         data: data?.data,
         params: data?.params,
-        headers: Object.assign(data?.headers, {
+        headers: Object.assign(data?.headers || {}, {
           'Authorization': `${data?.bearer || 'Bot'} ${this.token}`,
           'Content-Type': 'application/json',
         }),
         withCredentials: true,
-      }).then((response) => response).catch((err) => err.response);
+      }).then((response) => response).catch((err) => err);
 
       resolve({
         status: req.status,
