@@ -47,6 +47,7 @@ class Client extends WebSocket {
         status: req.status,
         data: req.data,
         error: req.axiosError,
+        response: req,
       });
     });
   };
