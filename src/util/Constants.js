@@ -16,6 +16,13 @@ const defaultOptions = {
     baseURL: 'https://discord.com/api/v8',
   },
   intents: 1 << 0,
+  compress: false,
+  large_threshold: 50,
+  guild_subscriptions: false,
+  shard: [
+    parseInt(process.env.shardID) || 0,
+    parseInt(process.env.shardCount) || 1,
+  ],
 };
 
 module.exports = {

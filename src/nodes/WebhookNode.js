@@ -83,7 +83,7 @@ class WebhookNode {
      * @param {string} [token=this.webhookToken] - Webhook token
      * @return {Promise<Webhook>}
      */
-    async getWithToken(id = this.webhookID, token = this.webhookToken) {
+    async getWithToken(token = this.webhookToken, id = this.webhookID) {
         return await this.client.instance.get(`/webhooks/${id}/${token}`);
     };
 
@@ -94,7 +94,7 @@ class WebhookNode {
      * @param {?{data: ?{name: ?string, avatar: ?string, channel_id: ?string}}} options - options
      * @return {Promise<Webhook>}
      */
-    async modify(id = this.webhookID, options) {
+    async modify(options, id = this.webhookID) {
         return await this.client.instance.patch(`/webhooks/${id}`, {data: options});
     };
 
@@ -106,7 +106,7 @@ class WebhookNode {
      * @param {?{data: ?{name: string, avatar: ?string}}} options - options
      * @return {Promise<webhook>}
      */
-    async modifyWithToken(id = this.webhookID, token = this.webhookToken, options) {
+    async modifyWithToken(options, token = this.webhookToken, id = this.webhookID) {
         return await this.client.instance.patch(`/webhooks/${id}/${token}`, {data: options});
     };
 
@@ -127,7 +127,7 @@ class WebhookNode {
      * @param {string} [token=this.webhookToken] - Webhook Token
      * @return {Promise<void>}
      */
-    async deleteWithToken(id = this.webhookID, token = this.webhookToken) {
+    async deleteWithToken(token = this.webhookToken, id = this.webhookID) {
         return await this.client.instance.delete(`/webhooks/${id}/${token}`);
     };
 
@@ -139,7 +139,7 @@ class WebhookNode {
      * @param {?{data: ?{content: string, username: ?string, avatar_url: ?string, tts: ?boolean, file: ?any, embeds: ?Embed[], payload_json: ?string, allowed_mentions: AllowedMentions}, params: {wait: ?boolean}, headers: ?{'Content-Type': 'application/json'}}} options - options
      * @return {Promise<any>}
      */
-    async execute(id = this.webhookID, token = this.webhookToken, options) {
+    async execute(options, token = this.webhookToken, id = this.webhookID) {
         return await this.client.instance.post(`/webhooks/${id}/${token}`, {data: options, params, headers: {'content-type': content_type}});
     };
 
@@ -148,7 +148,7 @@ class WebhookNode {
      * @param {string} token - Webhook Token
      * @param {?{params: ?{wait: ?boolean}}} options - options
      */
-    async executeSlack_Compatible(id = this.webhookID, token = this.webhookToken, options) {
+    async executeSlack_Compatible(options, token = this.webhookToken, id = this.webhookID) {
         return await this.client.instance.post(`/webhooks/${id}/${token}/slack`, {params: options});
     };
 
@@ -157,7 +157,7 @@ class WebhookNode {
      * @param {string} token - Webhook Token
      * @param {?{params: ?{wait: ?boolean}}} options - options
      */
-    async executeGithub_Compatible(id = this.webhookID, token = this.webhookToken, options) {
+    async executeGithub_Compatible(options, token = this.webhookToken, id = this.webhookID) {
         return await this.client.instance.post(`/webhooks/${id}/${token}/github`, {params: options});
     };
 };

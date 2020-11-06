@@ -36,7 +36,7 @@ class InviteNode {
      * @param {?boolean} [with_counts=false] - With Count
      * @return {Promise<Invite>}
      */
-    async get(inviteCode = this.inviteCode, with_counts = false) {
+    async get(with_counts = false, inviteCode = this.inviteCode) {
         return await this.client.instance.get(`/invites/${inviteCode}`, {params: {with_counts}});
     };
 

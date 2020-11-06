@@ -59,7 +59,7 @@ class ChannelNode {
      * @param {{name: string, type: 'Text' | 'News', position: ?number, topic: ?string, nsfw: ?boolean, rate_limit_per_user: ?number, bitrate: ?number, user_limit: ?number, permission_overwrite: ?Overwrite[], parent_id: ?string}} options
      * @return {Promise<Channel>}
      */
-  async modify(id = this.channelID, options) {
+  async modify(options, id = this.channelID) {
     return await this.client.instance.patch(`/channels/${id}`, options);
   };
 
@@ -78,9 +78,9 @@ class ChannelNode {
      * @see https://discord.com/developers/docs/resources/channel#get-channel-messages
      * @param {string} [id=this.channelID] - Channel ID
      * @param {?{?data: {around: ?string, before: ?string, after: ?string, limit: ?string}}} options
-     * @return {Promise<Channel[]>}
+     * @return {Promise<Message[]>}
      */
-  async getMessages(id = this.channelID, options) {
+  async getMessages(options, id = this.channelID) {
     return await this.client.instance.get(`/channels/${id}/messages`, options);
   };
 
@@ -89,9 +89,9 @@ class ChannelNode {
      * @see https://discord.com/developers/docs/resources/channel#get-channel-message
      * @param {string} [channelID=this.channelID] - Channel ID
      * @param {string} messageID - Message ID
-     * @return {Promise<Channel>}
+     * @return {Promise<Message>}
      */
-  async getMessage(channelID = this.channelID, messageID) {
+  async getMessage(messageID, channelID = this.channelID) {
     return await this.client.instance.get(`/channels/${channelID}/messages/${messageID}`);
   };
 
@@ -102,7 +102,7 @@ class ChannelNode {
      * @param {?{?data:{content: string, nonce: number | string, tts: boolean, file: Buffer, embed: Embed, payload_json: string, allowed_mentions: {parse: ?[], roles: ?[], users: ?[]}}}} options
      * @return {Promise<Message>}
      */
-  async createMessage(id = this.channelID, options) {
+  async createMessage(options, id = this.channelID) {
     return await this.client.instance.post(`/channels/${id}/messages`, options);
   };
 
@@ -113,7 +113,7 @@ class ChannelNode {
      * @param {string} messageID - message ID
      * @return {Promise<Message>}
      */
-  async crosspotMessage(channelID = this.channelID, messageID) {
+  async crosspotMessage(messageID, channelID = this.channelID) {
     return await this.client.instance.post(`/channels/${channelID}/messages/${messageID}/crosspot`);
   };
 
@@ -125,7 +125,7 @@ class ChannelNode {
      * @param {string} emoji - emoji parsed
      * @return {Promise<void>}
      */
-  async createReaction(channelID = this.channelID, messageID, emoji) {
+  async createReaction(messageID, emoji, channelID = this.channelID) {
     return await this.client.instance.put(`/channels/${channelID}/messages/${messageID}/reactions/${emoji}/@me`);
   };
 
@@ -137,7 +137,7 @@ class ChannelNode {
      * @param {string} emoji - emoji
      * @return {Promise<void>}
      */
-  async deleteOwnReaction(channelID = this.channelID, messageID, emoji) {
+  async deleteOwnReaction(messageID, emoji, channelID = this.channelID) {
     return await this.client.instance.delete(`/channels/${channelID}/messages/${messageID}/reactions/${emoji}/@me`);
   };
 
@@ -150,7 +150,7 @@ class ChannelNode {
      * @param {string} userID - User ID
      * @return {Promise<void>}
      */
-  async deleteUserReaction(channelID = this.channelID, messageID, emoji, userID) {
+  async deleteUserReaction(messageID, emoji, userID, channelID = this.channelID) {
     return await this.client.instance.delete(`/channels/${channelID}/messages/${messageID}/reactions/${emoji}/${userID}`);
   };
 
@@ -163,7 +163,7 @@ class ChannelNode {
      * @param {?{params: ?{before: ?string, after: ?string, limit: ?number}}} options - options
      * @param {Promise<User[]}
      */
-  async getReactions(channelID = this.channelID, messageID, emoji, options) {
+  async getReactions(messageID, emoji, options, channelID = this.channelID) {
     return await this.client.instance.get(`/channels/${channelID}/messages/${messageID}/reactions/${emoji}`, options);
   };
 
@@ -174,7 +174,7 @@ class ChannelNode {
      * @param {string} messageID - Message ID
      * @return {Promise<void>}
      */
-  async deleteAllReactions(channelID = this.channelID, messageID) {
+  async deleteAllReactions(messageID, channelID = this.channelID) {
     return await this.client.instance.get(`/channels/${channelID}/messages/${messageID}/reactions`);
   };
 
@@ -186,7 +186,7 @@ class ChannelNode {
      * @param {string} emoji - emoji parsed
      * @return {Promise<void>}
      */
-  async deleteAllReactionsForEmoji(channelID = this.channelID, messageID, emoji) {
+  async deleteAllReactionsForEmoji(messageID, emoji, channelID = this.channelID) {
     return await this.client.instance.get(`/channels/${channelID}/messages/${messageID}/reactions/${emoji}`);
   };
 
@@ -198,7 +198,7 @@ class ChannelNode {
      * @param {?{data: ?{content: ?string, embed: ?Embed, flags: ?number}}} options - options
      * @return {Promise<Message>}
      */
-  async editMessage(channelID = this.channelID, messageID, options) {
+  async editMessage(messageID, options, channelID = this.channelID) {
     return await this.client.instance.patch(`/channels/${channelID}/messages/${messageID}`, options);
   };
 
@@ -209,7 +209,7 @@ class ChannelNode {
      * @param {string} messageID - Message ID
      * @return {Promise<void>}
      */
-  async deleteMessage(channelID = this.channelID, messageID) {
+  async deleteMessage(messageID, channelID = this.channelID) {
     return await this.client.instance.delete(`/channels/${channelID}/messages/${messageID}`);
   };
 
@@ -220,7 +220,7 @@ class ChannelNode {
      * @param {{data: {message: string[]}}} options - options
      * @return {Promise<void>}
      */
-  async bulkDeleteMessages(channelID = this.channelID, options) {
+  async bulkDeleteMessages(options, channelID = this.channelID) {
     return await this.client.instance.post(`/channels/${channelID}/messages/bulk-delete`, options);
   };
 
@@ -232,7 +232,7 @@ class ChannelNode {
      * @param {{data: {allow: string, deny: string, type: number}}} options - options
      * @return {Promise<void>}
      */
-  async editPermissions(channelID = this.channelID, overwriteID, options) {
+  async editPermissions(overwriteID, options, channelID = this.channelID) {
     return await this.client.instance.put(`/channels/${channelID}/permissions/${overwriteID}`, options);
   };
 
@@ -253,7 +253,7 @@ class ChannelNode {
      * @param {?{data: {max_age: 86400, max_uses: 0, temporary: false, unique: false, target_user: ?string, target_user_type: number }}} options - options
      * @return {Promise<Invite>}
      */
-  async createInvite(id = this.channelID, options) {
+  async createInvite(options, id = this.channelID) {
     return await this.client.instance.post(`/channels/${id}/invites`, options);
   };
 
@@ -264,7 +264,7 @@ class ChannelNode {
      * @param {string} overwriteID - Overwrite ID
      * @return {Promise<void>}
      */
-  async deletePermission(channelID = this.channelID, overwriteID) {
+  async deletePermission(overwriteID, channelID = this.channelID) {
     return await this.client.instance.delete(`/channels/${channelID}/permissions/${overwriteID}`);
   };
 
@@ -275,7 +275,7 @@ class ChannelNode {
      * @param {{data: {webhook_channel_id: string}}} options - options
      * @return {Promise<Channel>}
      */
-  async followNews(id = this.channelID, options) {
+  async followNews(options, id = this.channelID) {
     return await this.client.instance.post(`/channels/${id}/followers`, options);
   };
 
@@ -306,7 +306,7 @@ class ChannelNode {
      * @param {string} messageID - Message ID
      * @return {Promise<void>}
      */
-  async addPinnedMessage(channelID = this.channelID, messageID) {
+  async addPinnedMessage(messageID, channelID = this.channelID) {
     return await this.client.instance.put(`/channels/${channelID}/pins/${messageID}`);
   };
 
@@ -317,7 +317,7 @@ class ChannelNode {
      * @param {string} messageID - Message ID
      * @return {Promise<void>}
      */
-  async deletePinnedMessage(channelID = this.channelID, messageID) {
+  async deletePinnedMessage(messageID, channelID = this.channelID) {
     return await this.client.instance.delete(`/channels/${channelID}/pins/${messageID}`);
   };
 
@@ -329,7 +329,7 @@ class ChannelNode {
      * @param {{data: {access_token: string, nick: string}}} options - options
      * @return {Promise<void>}
      */
-  async groupDMAddRecipient(channelID = this.channelID, userID, options) {
+  async groupDMAddRecipient(userID, options, channelID = this.channelID) {
     return await this.client.instance.put(`/channels/${channelID}/recipients/${userID}`, options);
   };
 
@@ -340,7 +340,7 @@ class ChannelNode {
      * @param {string} userID - User ID
      * @return {Promise<void>}
      */
-  async groupDMRemoveRecipient(channelID = this.channelID, userID) {
+  async groupDMRemoveRecipient(userID, channelID = this.channelID) {
     return await this.client.instance.delete(`/channels/${channelID}/recipients/${userID}`);
   };
 };

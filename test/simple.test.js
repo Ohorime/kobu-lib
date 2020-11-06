@@ -7,7 +7,9 @@ const client = new Client({
 
 client.on('ping', (ping) => console.log(`PING: ${ping}ms`));
 
-client.on('raw', console.log);
+// client.on('raw', console.log);
+
+client.on('debug', console.log);
 
 client.on('READY', (ready) =>
   console.log(`${ready.user.username} is now Ready`));

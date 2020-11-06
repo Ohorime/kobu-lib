@@ -37,7 +37,7 @@ class AuditLogNode {
      * @param {{data: {user_id: string, action_type: number, before: string, limit: number}}} options
      * @return {Promise<AuditLog>}
      */
-  async getAuditLog(id = this.guildID, options) {
+  async getAuditLog(options, id = this.guildID) {
     return await this.client.instance.get(`/guilds/${id}/audit-logs`, options);
   };
 };

@@ -11,6 +11,7 @@ const axios = require('axios');
  * @extends EventEmitter
  */
 class WebSocket extends EventEmitter {
+  #token;
   /**
      * Options of WebSocket
      * @param {*} options
@@ -58,6 +59,14 @@ class WebSocket extends EventEmitter {
          * @type {number}
          */
     this.lastSend = null;
+    /**
+     * @type {number}
+     */
+    this.shardID = process.env.shardID || 0;
+    /**
+     * @type {number}
+     */
+    this.shardCount = process.env.shardCount || 1;
   };
 
   /**
@@ -73,7 +82,9 @@ class WebSocket extends EventEmitter {
     // Fetch endpoint
     this.wsURL = await this.getEndpoint();
 
-    this.emit('raw', `Ws url: ${this.wsURL}`);
+    this.emit('debug', `[SHARD ${this.shardID}] Websocket connect with url ${this.wsURL}`);
+
+    this.emit('debug', `[SHARD ${this.shardID}] Token use ****.${token.slice(token.length-5, token.length)}`);
 
     // Connect to Discord WebSocket
     this.ws = new WebSocketClient(
@@ -96,11 +107,13 @@ class WebSocket extends EventEmitter {
 
       switch (json.op) {
         case 0:
+          this.emit('debug', `[SHARD ${this.shardID}] message received ${json.t} (length: ${JSON.stringify(json).length})`);
           if (json.t === 'READY') this.session_id = json.d.user.session_id;
           // Emit every event
           this.emit(json.t, json.d);
           break;
         case 10:
+          this.emit('debug', `[SHARD ${this.shardID}] heartbeat received -> ${json.d.heartbeat_interval}`);
           // save heartbeat
           this.heartbeat = json.d.heartbeat_interval;
 
@@ -114,10 +127,13 @@ class WebSocket extends EventEmitter {
               d: this.sequence,
             }));
 
+            this.emit('debug', `[SHARD ${this.shardID}] Heartbeat send -> ${this.sequence} sequence`);
+
             // Wait 15s for receive ACK
             setTimeout(() => {
               // If ACK is not received
               if (!this.ack) {
+                this.emit('debug', `[SHARD ${this.shardID}] ACK not received, reconnecting ...`);
                 // Close client
                 this.ws.close();
                 // Log error ACK not reveived
@@ -129,6 +145,7 @@ class WebSocket extends EventEmitter {
             }, 15000);
           }, this.heartbeat);
 
+          this.emit('debug', `[SHARD ${this.shardID}] Identification ...`);
           // indentifation
           this.ws.send(erlpack.pack({
             op: 2,
@@ -140,17 +157,15 @@ class WebSocket extends EventEmitter {
                 $device: 'kobu-lib',
               },
               intents: this.options.intents,
-              compress: false,
-              large_threshold: 50,
-              guild_subscriptions: false,
-              shard: [
-                parseInt(process.env.shardID),
-                parseInt(process.env.shardCount),
-              ],
+              compress: this.options.compress,
+              large_threshold: this.options.large_threshold,
+              guild_subscriptions: this.options.guild_subscriptions,
+              shard: this.options.shard,
             },
           }));
           break;
         case 11:
+          this.emit('debug', `[SHARD ${this.shardID}] ACK received`);
           // set ack for true
           this.ack = true;
           // set ping

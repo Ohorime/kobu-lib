@@ -26,7 +26,7 @@ class Client extends WebSocket {
      * Make request
      * @param {'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE'} method
      * @param {string} url
-     * @param {*} data
+     * @param {RequestData} data
      * @return {Promise<any>}
      */
   request(method, url, data) {

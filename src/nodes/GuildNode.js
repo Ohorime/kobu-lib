@@ -82,7 +82,7 @@ class GuildNode {
      * @param {?boolean} [with_counts=false] - when true, will return approximate member and presence counts for the guild
      * @return {Promise<Guild>}
      */
-    async get(id = this.guildID, with_counts = false) {
+    async get(with_counts = false, id = this.guildID) {
         return await this.client.instance.get(`/guilds/${id}`, {params: {with_counts}});
     };
 
@@ -103,7 +103,7 @@ class GuildNode {
      * @param {?{?data: {name: ?string, region: ?string, verifiction_level: ?number, default_message_notifications: ?number, explicit_content_filter: ?number, afk_channel_id: ?string, afk_timeout: ?number, icon: ?string, owner_id: ?string, splash: ?string, banner: ?string, system_channel_id: ?string, rules_channel_id: ?string, public_updates_channel_id: ?string, preferred_locale: ?string}}} options - options
      * @return {Promise<Guild>}
      */
-    async modify(id = this.guildID, options) {
+    async modify(options, id = this.guildID) {
         return await this.client.instance.patch(`/guilds/${id}`, options);
     };
 
@@ -134,7 +134,7 @@ class GuildNode {
      * @param {{data: {name: string, type: ?number, topic: ?string, bitrate: ?number, user_limit: ?number, rate_limit_per_user: ?number, position: ?number, permission_overwrites: ?Overwrite[], parent_id: ?string, nsfw: ?boolean}}} options - options
      * @return {Promise<Channel>}
      */
-    async createChannel(id = this.guildID, options) {
+    async createChannel(options, id = this.guildID) {
         return await this.client.instance.post(`/guilds/${id}/channels`, options);
     };
 
@@ -145,7 +145,7 @@ class GuildNode {
      * @param {{data: {id: string, position: number}}} options - options
      * @return {Promise<void>}
      */
-    async modifyChannelPosition(id = this.guildID, options) {
+    async modifyChannelPosition(options, id = this.guildID) {
         return await this.client.instance.patch(`/guilds/${id}/channels`, options);
     };
 
@@ -156,7 +156,7 @@ class GuildNode {
      * @param {string} userID - User ID
      * @return {Promise<Member[]>}
      */
-    async getMember(guildID = this.guildID, userID) {
+    async getMember(userID, guildID = this.guildID) {
         return await this.client.instance.get(`/guilds/${guildID}/members/${userID}`);
     };
 
@@ -167,7 +167,7 @@ class GuildNode {
      * @param {?{params: ?{limit: 1, after: 0}}} options - options
      * @return {Promise<Member[]>}   
      */
-    async getMembers(id = this.guildID, options) {
+    async getMembers(options, id = this.guildID) {
         return await this.client.instance.get(`/guilds/${id}/members`, options);
     };
 
@@ -179,7 +179,7 @@ class GuildNode {
      * @param {{data: {access_token: string, nick: ?string, roles: ?string[], mute: ?boolean, deaf: ?boolean}}} options - options
      * @return {Promise<Member>}
      */
-    async addMember(guildID = this.guildID, userID, options) {
+    async addMember(userID, options, guildID = this.guildID) {
         return await this.client.instance.put(`/guilds/${guildID}/members/${userID}`, options);
     };
 
@@ -191,7 +191,7 @@ class GuildNode {
      * @param {?{data: ?{nick: ?string, roles: ?string, mute: ?boolean, deaf: ?boolean, channel_id: ?string}}} options - options
      * @return {Promise<void>}
      */
-    async modifyMember(guildID = this.guildID, userID, options) {
+    async modifyMember(userID, options, guildID = this.guildID) {
         return await this.client.instance.patch(`/guilds/${guildID}/members/${userID}`, options);
     };
 
@@ -202,7 +202,7 @@ class GuildNode {
      * @param {{data: {nick: string}}} options - options
      * @return {Promise<void>}
      */
-    async modifyCurrentUserNick(id = this.guildID, options) {
+    async modifyCurrentUserNick(options, id = this.guildID) {
         return await this.client.instance.patch(`/guilds/${id}/members/@me/nick`, options);
     };
 
@@ -214,7 +214,7 @@ class GuildNode {
      * @param {string} roleID - Role ID
      * @return {Promise<void>}
      */
-    async addMemberRole(guildID = this.guildID, userID, roleID) {
+    async addMemberRole(userID, roleID, guildID = this.guildID) {
         return await this.client.instance.put(`/guilds/${guildID}/members/${userID}/roles/${roleID}`);
     };
 
@@ -226,7 +226,7 @@ class GuildNode {
      * @param {string} roleID - Role ID
      * @return {Promise<void>}
      */
-    async removeMemberRole(guildID = this.guildID, userID, roleID) {
+    async removeMemberRole(userID, roleID, guildID = this.guildID) {
         return await this.client.instance.delete(`/guilds/${guildID}/members/${userID}/roles/${roleID}`);
     };
 
@@ -237,7 +237,7 @@ class GuildNode {
      * @param {string} userID - User ID
      * @return {Promise<void>}
      */
-    async removeMember(guildID = this.guildID, userID) {
+    async removeMember(userID, guildID = this.guildID) {
         return await this.client.instance.delete(`/guilds/${guildID}/members/${userID}`);
     };
 
@@ -258,7 +258,7 @@ class GuildNode {
      * @param {string} userID - user ID
      * @return {Promise<Ban>}
      */
-    async getBan(guildID = this.guildID, userID) {
+    async getBan(userID, guildID = this.guildID) {
         return await this.client.instance.get(`/guilds/${guildID}/bans/${userID}`);
     };
 
@@ -270,7 +270,7 @@ class GuildNode {
      * @param {?{data: ?{delete_message_days: ?number, reason: ?string}}} options - options
      * @return {Promise<void>}
      */
-    async createBan(guildID = this.guildID, userID, options) {
+    async createBan(userID, options, guildID = this.guildID) {
         return await this.client.instance.put(`/guilds/${guildID}/bans/${userID}`, options);
     };
 
@@ -281,7 +281,7 @@ class GuildNode {
      * @param {string} userID - User ID
      * @return {Promise<void>}
      */
-    async removeBan(guildID = this.guildID, userID) {
+    async removeBan(userID, guildID = this.guildID) {
         return await this.client.instance.delete(`/guilds/${guildID}/bans/${userID}`);
     };
 
@@ -302,7 +302,7 @@ class GuildNode {
      * @param {?{data: ?{name: "new role", permissions: ?string, color: 0, hoist: false, mentionable: false}}} options - options
      * @return {Promise<Role>}
      */
-    async createRole(id = this.guildID, options) {
+    async createRole(options, id = this.guildID) {
         return await this.client.instance.post(`/guilds/${id}/roles`, options);
     };
 
@@ -313,7 +313,7 @@ class GuildNode {
      * @param {{data: {id: string, position: ?number}}} options - options
      * @return {Promise<Role>}
      */
-    async modifyRolePosition(id = this.guildID, options) {
+    async modifyRolePosition(options, id = this.guildID) {
         return await this.client.instance.patch(`/guilds/${id}/roles`, options);
     };
 
@@ -325,7 +325,7 @@ class GuildNode {
      * @param {?{data: ?{name: ?string, permissions: ?string, color: ?number, hoist: ?boolean, mentionable: ?boolean}}} options - options
      * @return {Promise<Role>}
      */
-    async modifyRole(guildID = this.guildID, roleID, options) {
+    async modifyRole(roleID, options, guildID = this.guildID) {
         return await this.client.instance.path(`/guilds/${guildID}/roles/${roleID}`, options);
     };
 
@@ -336,7 +336,7 @@ class GuildNode {
      * @param {string} roleID - Role ID
      * @return {Promise<void>}
      */
-    async deleteRole(guildID = this.guildID, roleID) {
+    async deleteRole(roleID, guildID = this.guildID) {
         return await this.client.instance.delete(`/guilds/${guildID}/roles/${roleID}`);
     };
 
@@ -347,7 +347,7 @@ class GuildNode {
      * @param {?{params: ?{days: 7, include_roles: ?string}}} options - options
      * @return {Promise<*>}
      */
-    async getPruneCount(id = this.guildID, options) {
+    async getPruneCount(options, id = this.guildID) {
         return await this.client.instance.get(`/guilds/${id}/prune`, options);
     };
 
@@ -358,7 +358,7 @@ class GuildNode {
      * @param {{data: {days: 7, compute_prune_count: true, include_roles: ?string[]}}} options - options
      * @return {Promise<*>}
      */
-    async beginPrune(id = this.guildID, options) {
+    async beginPrune(options, id = this.guildID) {
         return await this.client.instance.post(`/guilds/${id}/prune`, options);
     };
 
@@ -399,7 +399,7 @@ class GuildNode {
      * @param {{data: {type: string, id: string}}} options - options
      * @return {Promise<void>}
      */
-    async createIntegration(id = this.guildID, options) {
+    async createIntegration(options, id = this.guildID) {
         return await this.client.instance.post(`/guilds/${id}/integrations`, options);
     };
 
@@ -411,7 +411,7 @@ class GuildNode {
      * @param {?{data: ?{expire_behavior: ?number, expire_grace_period: ?number, enable_emoticons: ?boolean}}} options - options
      * @return {Promise<integrator>}
      */
-    async modifyIntegration(guildID = this.guildID, integrationID, options) {
+    async modifyIntegration(integrationID, options, id = this.guildID) {
         return await this.client.instance.patch(`/guilds/${guildID}/integrations/${integrationID}`, options);
     };
 
@@ -422,7 +422,7 @@ class GuildNode {
      * @param {string} integrationID - Integration ID
      * @return {Promise<void>}
      */
-    async deleteIntegration(guildID = this.guildID, integrationID) {
+    async deleteIntegration(integrationID, guildID = this.guildID) {
         return await this.client.instance.delete(`/guilds/${guildID}/integrations/${integrationID}`);
     };
 
@@ -433,7 +433,7 @@ class GuildNode {
      * @param {string} integrationID - Integration ID
      * @return {Promise<void>}
      */
-    async syncIntegration(guildID = this.guildID, integrationID) {
+    async syncIntegration(integrationID, guildID = this.guildID) {
         return await this.client.instance.post(`/guilds/${guildID}/integrations/${integrationID}/sync`);
     };
 
@@ -454,7 +454,7 @@ class GuildNode {
      * @param {{data: Widget}} options - options
      * @return {Promise<Widget>}
      */
-    async modifyWidget(id = this.guildID, options) {
+    async modifyWidget(options, id = this.guildID) {
         return await this.client.instance.patch(`/guilds/${id}/widget`, options);
     };
 
@@ -484,7 +484,7 @@ class GuildNode {
      * @param {?{params: ?{style: ?string}}} options - options
      * @return {Promise<Buffer>}
      */
-    async getWidgetImage(id = this.guildID, options) {
+    async getWidgetImage(options, id = this.guildID) {
         return await this.client.instance.get(`guilds/${id}/widget.png`, options);
     };
 };

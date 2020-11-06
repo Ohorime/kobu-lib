@@ -52,7 +52,7 @@ class EmojiNode {
      * @param {string} emojiID - Emoji ID
      * @return {Promise<Emoji>}
      */
-    async getEmoji(guildID = this.guildID, emojiID = this.emojiID) {
+    async getEmoji(emojiID = this.emojiID, guildID = this.guildID) {
         return await this.client.instance.get(`/guilds/${guildID}/emojis/${emojiID}`);
     };
 
@@ -63,7 +63,7 @@ class EmojiNode {
      * @param {{data: {name: string, image: string, roles: string[]}}} options - options
      * @return {Promise<Emoji>}
      */
-    async createEmoji(guildID = this.guildID, options) {
+    async createEmoji(options, guildID = this.guildID) {
         return await this.client.instance.post(`/guilds/${guildID}/emojis`, options);
     };
 
@@ -75,7 +75,7 @@ class EmojiNode {
      * @param {?{data: ?{name: ?string, roles: ?string[]}}} options - options
      * @return {Promise<Emoji>}
      */
-    async modifyEmoji(guildID = this.guildID, emojiID = this.emojiID, options) {
+    async modifyEmoji(options, emojiID = this.emojiID, guildID = this.guildID) {
         return await this.client.instance.patch(`/guilds/${guildID}/emojis/${emojiID}`, options);
     };
 
