@@ -31,7 +31,6 @@ class Client extends WebSocket {
      */
   request(method, url, data) {
     return new Promise(async (resolve, reject) => {
-      console.log(data);
       const req = await axios({
         url: `${this.options.http.baseURL}${url}`,
         method,
