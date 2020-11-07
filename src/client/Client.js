@@ -31,15 +31,16 @@ class Client extends WebSocket {
      */
   request(method, url, data) {
     return new Promise(async (resolve, reject) => {
+      console.log(data);
       const req = await axios({
         url: `${this.options.http.baseURL}${url}`,
         method,
         data: data?.data,
         params: data?.params,
-        headers: Object.assign(data?.headers || {}, {
+        headers: Object.assign({
           'Authorization': `${data?.bearer || 'Bot'} ${this.token}`,
           'Content-Type': 'application/json',
-        }),
+        }, data?.headers || {}),
         withCredentials: true,
       }).then((response) => response)
       .catch((err) => reject(err));
