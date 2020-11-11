@@ -1,6 +1,6 @@
 'use strict';
 
-import { UserObject } from '../src/structures/User';
+import User, { UserObject } from '../src/structures/User';
 
 declare module 'kobu-lib' {
     import { AxiosResponse, AxiosError } from 'axios';
@@ -328,8 +328,8 @@ declare module 'kobu-lib' {
         public client: Client;
         public channelID: Snowflake;
 
-        public get(id?: Snowflake): Promise<RequestResponse<ChannelObject>>;
-        public modify(options: RequestData<{
+        public async get(id?: Snowflake): Promise<RequestResponse<ChannelObject>>;
+        public async modify(options: RequestData<{
             name: string;
             type: number;
             position: ?number;
@@ -341,15 +341,15 @@ declare module 'kobu-lib' {
             permission_overwrites: ?[OverwriteObject];
             parent_id: ?Snowflake;
         }>, id?: Snowflake): Promise<RequestResponse<ChannelObject>>;
-        public delete(id?: Snowflake): Promise<RequestResponse<ChannelObject>>;
-        public getMessages(options: RequestData<null, {
+        public async delete(id?: Snowflake): Promise<RequestResponse<ChannelObject>>;
+        public async getMessages(options: RequestData<null, {
             around: Snowflake;
             before: Snowflake;
             after: Snowflake;
             limit: number;
         }>, id?: Snowflake): Promise<RequestResponse<[MessageObject]>>;
-        public getMessage(messageID: Snowflake, channelID?: Snowflake): Promise<RequestResponse<MessageObject>>;
-        public createMessage(options: RequestData<{
+        public async getMessage(messageID: Snowflake, channelID?: Snowflake): Promise<RequestResponse<MessageObject>>;
+        public async createMessage(options: RequestData<{
             content: string;
             nonce: string | number;
             tts: boolean;
@@ -358,33 +358,33 @@ declare module 'kobu-lib' {
             payload_json: string;
             allowed_mentions: AllowedMentionsObject,
         }, null, ?'application/json' | 'multipart/form-data'>, id?: Snowflake): Promise<RequestResponse<Message>>;
-        public crosspostMessage(messageID: Snowflake, channelID?: Snowflake): Promise<RequestResponse<Message>>;
-        public createReaction(messageID: Snowflake, emoji: string, channelID?: Snowflake): Promise<RequestResponse>;
-        public deleteOwnReaction(messageID: Snowflake, emoji: string, channelID?: Snowflake): Promise<ReactionObject>;
-        public deleteUserReaction(messageID: Snowflake, emoji: string, userID: Snowflake, channelID?: Snowflake): Promise<ReactionObject>;
-        public getReactions(messageID: Snowflake, emoji: string, options: RequestData<null, {
+        public async crosspostMessage(messageID: Snowflake, channelID?: Snowflake): Promise<RequestResponse<Message>>;
+        public async createReaction(messageID: Snowflake, emoji: string, channelID?: Snowflake): Promise<RequestResponse>;
+        public async deleteOwnReaction(messageID: Snowflake, emoji: string, channelID?: Snowflake): Promise<ReactionObject>;
+        public async deleteUserReaction(messageID: Snowflake, emoji: string, userID: Snowflake, channelID?: Snowflake): Promise<ReactionObject>;
+        public async getReactions(messageID: Snowflake, emoji: string, options: RequestData<null, {
             before?: Snowflake,
             after?: Snowflake,
             limit?: 25,
         }>, channelID?: Snowflake): Promise<RequestResponse<[User]>>;
-        public deleteAllReactions(messageID: Snowflake, channelID: Snowflake): Promise<RequestResponse>;
-        public deleteAllReactionsForEmoji(messageID: Snowflake, emoji: string, channelID?: Snowflake): Promise<RequestResponse>;
-        public editMessage(messageID: Snowflake, options: RequestData<null, {
+        public async deleteAllReactions(messageID: Snowflake, channelID: Snowflake): Promise<RequestResponse>;
+        public async deleteAllReactionsForEmoji(messageID: Snowflake, emoji: string, channelID?: Snowflake): Promise<RequestResponse>;
+        public async editMessage(messageID: Snowflake, options: RequestData<null, {
             content: string,
             embed: EmbedObject,
             flags: number,
         }>): Promise<RequestResponse<MessageObject>>;
-        public deleteMessage(messageID: Snowflake, channelID?: Snowflake): Promise<RequestResponse>;
-        public bulkDeleteMessages(options: RequestData<null, {
+        public async deleteMessage(messageID: Snowflake, channelID?: Snowflake): Promise<RequestResponse>;
+        public async bulkDeleteMessages(options: RequestData<null, {
             messages: [Snowflake],
         }>, channelID?: Snowflake): Promise<RequestResponse>;
-        public editPermissions(overwriteID: Snowflake, options: RequestData<null, {
+        public async editPermissions(overwriteID: Snowflake, options: RequestData<null, {
             allow: string,
             deny: string,
             type: number,
         }>, channelID?: Snowflake): Promise<RequestResponse>;
-        public getInvites(id?: Snowflake): Promise<RequestResponse<[InviteObject]>>;
-        public createInvite(options: RequestData<null, {
+        public async getInvites(id?: Snowflake): Promise<RequestResponse<[InviteObject]>>;
+        public async createInvite(options: RequestData<null, {
             max_age: number,
             max_uses: number,
             temporary: boolean,
@@ -392,19 +392,183 @@ declare module 'kobu-lib' {
             target_user: string,
             target_user_type: number,
         }>, id?: Snowflake): Promise<RequestResponse<InviteObject>>;
-        public deletePermission(overwriteID: Snowflake, channelID?: Snowflake): Promise<RequestResponse>;
-        public followNews(options: RequestData<null, {
+        public async deletePermission(overwriteID: Snowflake, channelID?: Snowflake): Promise<RequestResponse>;
+        public async followNews(options: RequestData<null, {
             webhook_channel_id: Snowflake,
         }>, id?: Snowflake): Promise<RequestResponse<FollowedChannelObject>>;
-        public TriggerTypingIndicator(id?: Snowflake): Promise<RequestResponse>;
-        public getPinnedMessages(id?: Snowflake): Promise<RequestResponse<[MessageObject]>>;
-        public addPinnedMessage(messageID: Snowflake, channelID?: Snowflake): Promise<RequestResponse>;
-        public deletePinnedMessage(messageID: Snowflake, channelID?: Snowflake): Promise<RequestResponse>;
-        public groupDMAddRecipient(userID: Snowflake, options: RequestData<null, {
+        public async TriggerTypingIndicator(id?: Snowflake): Promise<RequestResponse>;
+        public async getPinnedMessages(id?: Snowflake): Promise<RequestResponse<[MessageObject]>>;
+        public async addPinnedMessage(messageID: Snowflake, channelID?: Snowflake): Promise<RequestResponse>;
+        public async deletePinnedMessage(messageID: Snowflake, channelID?: Snowflake): Promise<RequestResponse>;
+        public async groupDMAddRecipient(userID: Snowflake, options: RequestData<null, {
             access_token: string,
             nick: string,
         }>, channelID?: Snowflake): Promise<RequestResponse>;
-        public groupDMRemoveRecipient(userID: Snowflake, channelID?: Snowflake): Promise<RequestResponse>;
-        
+        public async groupDMRemoveRecipient(userID: Snowflake, channelID?: Snowflake): Promise<RequestResponse>;
     };
+
+    export interface EmojiObject {
+        id: ?Snowflake;
+        name: ?string;
+        roles?: [Snowflake];
+        user?: RoleObject;
+        require_colons?: boolean;
+        managed?: boolean;
+        animated?: boolean;
+        available?: boolean;
+    };
+
+    export class EmojiNode {
+        constructor(client: Client, guildID: Snowflake, emojiID: Snowflake);
+
+        public client: Client;
+        public guildID: Snowflake;
+        public emojiID: Snowflake;
+
+        public async list(guildID?: Snowflake): Promise<RequestResponse<[EmojiObject]>>;
+        public async get(emojiID?: Snowflake, guildID?: Snowflake): Promise<RequestResponse<EmojiNode>>;
+        public async create(options: RequestData<{
+            name: String,
+            image: String,
+            roles: [Snowflake],
+        }>, guildID: Snowflake): Promise<RequestResponse<EmojiObject>>;
+        public async modify(options: RequestData<{
+            name: string,
+            roles: ?[Snowflake],
+        }>, emojiID: Snowflake, guildID: Snowflake): Promise<RequestResponse<EmojiObject>>;
+        public async delete(emojiID: Snowflake, guildID: Snowflake): Promise<RequestResponse>;
+    };
+
+    export interface GuildObject {
+        id: Snowflake;
+        name: string;
+        icon: ?string;
+        icon_hash: ?string;
+        splash: ?string;
+        discorvery_splash: ?string;
+        owner?: boolean;
+        owner_id: Snowflake;
+        permissions?: string;
+        region: string;
+        afk_channel_id: ?Snowflake;
+        afk_timeout: number;
+        widget_enabed: boolean;
+        widget_channel_id: ?Snowflake;
+        verification_level: VerificationLevel;
+        default_message_notifications: DefaultMessageNotificationLevel;
+        explicit_content_filter: ExplicitContentFilterLevel;
+        roles: [RoleObject];
+        emojis: [EmojiObject];
+        features: [GuildFeature];
+        mfa_level: MFALevel;
+        application_id: ?Snowflake;
+        system_channel_id: ?Snowflake;
+        system_channel_flags: SystemChannelFlags;
+        rules_chnnel_id: ?Snowflake;
+        joined_at?: number;
+        large?: boolean;
+        unavailable?: boolean;
+        member_count?: number;
+        voice_states?: [VoiceStateObject];
+        members?: [GuildMemberObject];
+        channels?: [ChannelObject];
+        presences?: [PresenceUpdateObject];
+        max_presences?: ?number;
+        max_members?: number;
+        vanity_url_code: ?string;
+        description: ?string;
+        banner: ?string;
+        premium_tier: PremiumTier   ;
+        premium_subscription_count?: number;
+        preferred_locale: string;
+        public_updates_channel_id: ?Snowflake;
+        max_video_channel_users: number;
+        approximate_member_count: number;
+        approximate_presence_count: number;
+    };
+
+    export enum DefaultMessageNotificationLevel {
+        ALL_MESSAGES = 0,
+        ONLY_MENTIONS = 1,
+    };
+
+    export enum ExplicitContentFilterLevel {
+        DISABLED = 0,
+        MEMBERS_WITHOUT_ROLES = 1,
+        ALL_MEMBERS = 2,
+    };
+
+    export enum MFALevel {
+        NONCE = 0,
+        ELEVATED = 1,
+    };
+
+    export enum VerificationLevel {
+        NONE = 0,
+        LOW = 1,
+        MEDIUM = 2,
+        HIGH = 3,
+        VERY_HIGH = 4,
+    };
+
+    export enum PremiumTier {
+        NONE = 0,
+        TIER_1 = 1,
+        TIER_2 = 2,
+        TIER_3 = 3,
+    };
+
+    export enum SystemChannelFlags {
+        SUPRESS_JOIN_NOTIFICATIONS = 1 << 0,
+        SUPRESS_PREMIUM_SUBSCRIPTIONS = 1 << 1,
+    };
+
+    export type GuildFeature = 'INVITE_SPLASH' | 'VIP_REGIONS' | 'VANITY_URL' | 'VERIFIED' | 'PARTNERED' | 'COMMUNITY' | 'COMMERCE' | 'NEWS' | 'DISCOVERABLE' | 'FEATURANLE' | 'ANIMATED_ICON' | 'BANNER' | 'WELCOME_SCREEN_ENABLED';
+
+    export interface GuildPreviewObject {
+        id: Snowflake;
+        name: string;
+        icon: ?string;
+        splash: ?string;
+        discovery_splash: ?string;
+        emojis: [EmojiObject];
+        features: [GuildFeature];
+        approximate_member_count: number;
+        approximate_presence_count: number;
+        description: ?string;
+    };
+
+    export interface GuildWidgetObject {
+        enabled: boolean;
+        channel_id: ?Snowflake;
+    };
+
+    export interface GuildMemberObject {
+        user?: UserObject;
+        nick: ?string;
+        roles: [Snowflake];
+        joined_at: number;
+        premium_since?: ?number;
+        deaf: boolean;
+        mute: boolean;
+    };
+
+    export interface IntegrationObject {
+        id: Snowflake;
+        name: string;
+        type: string;
+        enabled: boolean;
+        role_id: Snowflake;
+        enable_emoticons?: boolean;
+        expire_behavoir: IntegrationExpireBehavoirs;
+        expire_grace_period: number;
+        user: ?UserObject;
+        account: AccountObject;
+        async_at: number;
+        subscriber_count: number;
+        revoked: boolean;
+        application: ApplicationObject;
+    };
+
+    export type IntegrationExpireBehavoirs = 0 | 1;
 };
