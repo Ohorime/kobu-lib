@@ -92,7 +92,12 @@ class WebSocket extends EventEmitter {
 
     // Log close and error event
     this.ws.on('close', (...args) => console.log('event close', ...args));
-    this.ws.on('error', (...args) => console.log('event error', ...args));
+    this.ws.on('error', (code, reason) => {
+      if (code == 1001) {
+        this.connect(this.token);
+      };
+      console.log('event error', code, reason);
+    });
 
     // Listen event message
     this.ws.on('message', (message) => {
