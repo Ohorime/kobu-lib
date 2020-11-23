@@ -67,6 +67,10 @@ class WebSocket extends EventEmitter {
      * @type {number}
      */
     this.shardCount = process.env.shardCount || 1;
+    /**
+     * @type {boolean}
+     */
+    this.maintained = false;
   };
 
   /**
@@ -90,8 +94,12 @@ class WebSocket extends EventEmitter {
     this.ws = new WebSocketClient(
         `${this.wsURL}?v=8&encoding=etf`);
 
+    this.ws.on('open', (...args) => console.log('event open', ...args));
+
     // Log close and error event
-    this.ws.on('close', (...args) => console.log('event close', ...args));
+    this.ws.on('close', (...args) => {
+      console.log('event close', ...args);
+    });
     this.ws.on('error', (code, reason) => {
       if (code == 1001) {
         this.connect(this.token);
@@ -100,7 +108,7 @@ class WebSocket extends EventEmitter {
     });
 
     // Listen event message
-    this.ws.on('message', (message) => {
+    this.ws.on('message', async (message) => {
       // Decode message
       const json = erlpack.unpack(message);
 
@@ -150,26 +158,34 @@ class WebSocket extends EventEmitter {
             }, 15000);
           }, this.heartbeat);
 
-          this.emit('debug', `[SHARD ${this.shardID}] Identification ...`);
-          // indentifation
-          this.ws.send(erlpack.pack({
-            op: 2,
-            d: {
-              token,
-              properties: {
-                $os: require('os').platform(),
-                $browser: 'kobu-lib',
-                $device: 'kobu-lib',
+          if (this.maintained) {
+            this.reconnect();
+          } else {
+            this.emit('debug', `[SHARD ${this.shardID}] Identification ...`);
+            // indentifation
+            this.ws.send(erlpack.pack({
+              op: 2,
+              d: {
+                token,
+                properties: {
+                  $os: require('os').platform(),
+                  $browser: 'kobu-lib',
+                  $device: 'kobu-lib',
+                },
+                intents: this.options.intents,
+                compress: this.options.compress,
+                large_threshold: this.options.large_threshold,
+                guild_subscriptions: this.options.guild_subscriptions,
+                shard: this.options.shard,
               },
-              intents: this.options.intents,
-              compress: this.options.compress,
-              large_threshold: this.options.large_threshold,
-              guild_subscriptions: this.options.guild_subscriptions,
-              shard: this.options.shard,
-            },
-          }));
+            }));
+
+            this.maintained = true;
+          };
+
           break;
         case 11:
+          /* ACK */
           this.emit('debug', `[SHARD ${this.shardID}] ACK received`);
           // set ack for true
           this.ack = true;
@@ -177,6 +193,19 @@ class WebSocket extends EventEmitter {
           this.ping = Date.now() - this.lastSend;
           this.emit('ping', this.ping);
           break;
+        case 9:
+          /* INVALID SESSION */
+          if (json.d) {
+            this.reconnect();
+          } else {
+            console.log('Relogin after 5 seconds');
+            this.maintained = false;
+            await new Promise((resolve) => setTimeout(resolve, 5e3));
+            this.connect(this.token);
+          };
+        default:
+          console.log('OP not supported [%s]', json.op, json);
+        break;
       };
     });
   };
@@ -189,6 +218,19 @@ class WebSocket extends EventEmitter {
       url: this.options.http.baseURL + '/gateway',
       method: 'GET',
     }).then((response) => response.data?.url);
+  };
+
+  reconnect() {
+    this.emit('debug', `[SHARD ${this.shardID}] Reconnecting ...`);
+
+    this.ws.send(erlpack.pack({
+      op: 6,
+      d: {
+        token: this.token,
+        session_id: this.session_id,
+        seq: this.sequence,
+      },
+    }));
   };
 };
 
