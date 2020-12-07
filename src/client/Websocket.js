@@ -85,7 +85,7 @@ class WebSocket extends EventEmitter {
   };
 
   destroy() {
-    this.ws?.close();
+    this.ws?.close(1000);
     clearInterval(this.heartbeat_interval);
     clearTimeout(this.ack_timeout);
 
