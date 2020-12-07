@@ -39,6 +39,17 @@ class WebSocket extends EventEmitter {
          * @type {number}
          */
     this.heartbeat;
+
+    /**
+     * @type {any}
+     */
+    this.heartbeat_interval;
+
+    /**
+     * @type {any}
+     */
+    this.ack_timeout
+
     /**
          * @type {number}
          */
@@ -73,6 +84,14 @@ class WebSocket extends EventEmitter {
     this.maintained = false;
   };
 
+  destroy() {
+    this.ws?.close();
+    clearInterval(this.heartbeat_interval);
+    clearTimeout(this.ack_timeout);
+
+    this.ws = null;
+  };
+
   /**
      * Connect to Discord WebSocket
      * @param {string} token
@@ -99,9 +118,11 @@ class WebSocket extends EventEmitter {
     // Log close and error event
     this.ws.on('close', (...args) => {
       console.log('event close', ...args);
+      this.destroy();
     });
     this.ws.on('error', (code, reason) => {
       if (code == 1001) {
+        this.destroy()
         this.connect(this.token);
       };
       console.log('event error', code, reason);
@@ -131,7 +152,7 @@ class WebSocket extends EventEmitter {
           this.heartbeat = json.d.heartbeat_interval;
 
           // send heartbeat
-          setInterval(() => {
+          this.heartbeat_interval = setInterval(() => {
             // Save date
             this.lastSend = Date.now();
             // Send heartbeat
@@ -143,7 +164,7 @@ class WebSocket extends EventEmitter {
             this.emit('debug', `[SHARD ${this.shardID}] Heartbeat send -> ${this.sequence} sequence`);
 
             // Wait 15s for receive ACK
-            setTimeout(() => {
+            this.ack_timeout = setTimeout(() => {
               // If ACK is not received
               if (!this.ack) {
                 this.emit('debug', `[SHARD ${this.shardID}] ACK not received, reconnecting ...`);
