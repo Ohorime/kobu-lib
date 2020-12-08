@@ -137,7 +137,7 @@ class WebSocket extends EventEmitter {
       this.emit('raw', json);
 
       // save sequence
-      this.sequence = json.s;
+      this.sequence = json.s ? json.s : this.sequence;
 
       switch (json.op) {
         case 0:
@@ -228,6 +228,7 @@ class WebSocket extends EventEmitter {
         case 7:
           /* NEED RECONNECT */
           this.reconnect();
+          break;
         default:
           console.log('OP not supported [%s]', json.op, json);
         break;
