@@ -224,6 +224,10 @@ class WebSocket extends EventEmitter {
             await new Promise((resolve) => setTimeout(resolve, 5e3));
             this.connect(this.token);
           };
+          break;
+        case 7:
+          /* NEED RECONNECT */
+          this.reconnect();
         default:
           console.log('OP not supported [%s]', json.op, json);
         break;
