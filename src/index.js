@@ -18,6 +18,7 @@ module.exports = exports = {
   UserNode: require('./nodes/UserNode'),
   VoiceNode: require('./nodes/VoiceNode'),
   WebhookNode: require('./nodes/WebhookNode'),
+  SplashNode: require('./nodes/SlashNode'),
 
   // Structures
   AuditLog: require('./structures/AuditLog'),
