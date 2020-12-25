@@ -154,7 +154,7 @@ declare module 'kobu-lib' {
         mention_roles: [RoleObject];
         mention_channels: [ChannelMentionObject];
         attachments: [AttachmentObject];
-        embeds: [EmbedObject];
+        embeds: EmbedObject[10];
         reactions?: [ReactionObject];
         nonce?: number | string;
         pinned: boolean;
@@ -571,4 +571,129 @@ declare module 'kobu-lib' {
     };
 
     export type IntegrationExpireBehavoirs = 0 | 1;
+
+    export interface ApplicationCommandOptionChoice {
+        name: string;
+        value: string | number;
+    };
+
+    export enum ApplicationCommandOptionsType {
+        SUB_COMMAND = 1,
+        SUB_COMMAND_GROUP = 2,
+        STRING = 3,
+        INTEGER = 4,
+        BOOLEAN = 5,
+        USER = 6,
+        CHANNEL = 7,
+        ROLE = 8,
+    }
+
+    export interface ApplicationCommandOption {
+        type: ApplicationCommandOptionsType;
+        name: string;
+        description: string;
+        default?: boolean;
+        required: boolean;
+        choices: ApplicationCommandOptionChoice[];
+        options: ApplicationCommandOption[];
+    };
+
+    export interface ApplicationCommand {
+        id: Snowflake;
+        application_id: Snowflake;
+        name: string;
+        description: string;
+        options: ApplicationCommandOption[];
+    };
+
+    export enum InteractionType {
+        Ping = 1,
+        ApplicationCommand = 2,
+    };
+
+    export interface Interaction {
+        id: Snowflake;
+        type: InteractionType;
+        data?: ApplicationCommandInteractionData;
+        guild_id: Snowflake;
+        channel_id: Snowflake;
+        member: GuildMemberObject;
+        token: string;
+        version: number;
+    };
+
+    export interface ApplicationCommandInteractionData {
+        id: Snowflake;
+        name: string;
+        options?: ApplicationCommandInteractionDataOption[];
+    };
+
+    export interface ApplicationCommandInteractionDataOption {
+        name: string;
+        value?: OptionsType;
+        options?: ApplicationCommandInteractionDataOption[];
+    };
+
+    export enum InteractionResponseType {
+        Pong = 1,
+        Acknowledge = 2,
+        ChannelMessage = 3,
+        ChannelMessageWithSource = 4,
+        ACKWithSource = 5,
+    };
+
+    export interface InteractionResponse {
+        type: InteractionResponseType;
+        data?: InteractionApplicationCommandCallbackData;
+    };
+
+    export interface InteractionApplicationCommandCallbackData {
+        tts?: boolean;
+        content: string;
+        embeds: EmbedObject[10];
+        allowed_mentions: AllowedMentionsObject;
+    };
+
+    export class SplashNode {
+        constructor(client: Client, applicationID: Snowflake, guildID: Snowflake, commandID: Snowflake, interaction: {
+            id: Snowflake,
+            token: string,
+        }, messageID: Snowflake);
+
+        public client: Client;
+        public applicationID: Snowflake;
+        public applicationToken: Snowflake;
+        public commandID: Snowflake;
+        public guildID: Snowflake;
+        public interaction: {
+            id: Snowflake,
+            token: string,
+        };
+        public messageID: Snowflake;
+
+        public async getGlobalApplicationCommands(applicationID?: Snowflake): Promise<RequestResponse<ApplicationCommand[]>>;
+        public async createGlobalApplicationCommand(options: {
+            name: string,
+            description: string,
+            options: ApplicationCommandOption[],
+        }, applicationID?: Snowflake): Promise<RequestResponse<ApplicationCommand>>;
+        public async editGlobalApplicationCommand(options: {
+            name: string,
+            description: string,
+            options: ApplicationCommandOption[],
+        }, applicationID?: Snowflake): Promise<RequestResponse<ApplicationCommand>>;
+        public async deleteGlobalApplicationCommand(commandID?: Snowflake, applicationID?: Snowflake): Promise<RequestResponse<void>>;
+        public async getGuildApplicationCommand(guildID?: Snowflake, applicationID: Snowflake): Promise<RequestResponse<ApplicationCommand>>;
+        public async createGuildApplicationCommand(options: {
+            name: string,
+            description: string,
+            options: ApplicationCommandOption[],
+        }, guildID?: Snowflake, applicationID?: Snowflake): Promise<RequestResponse<ApplicationCommand>>;
+        public async editGuildApplicationCommand(options: {
+            name: string,
+            description: string;
+            options: ApplicationCommandOption[],
+        }, commandID?: Snowflake, guildID?: Snowflake, applicationID?: Snowflake): Promise<RequestResponse<ApplicationCommand>>;
+        public async deleteGuildApplicationCommand();
+    };
 };
