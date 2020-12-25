@@ -94,7 +94,7 @@ class SplashNode {
     guildID;
     interaction;
     messageID;
-    constructor(client, applicationID, commandID, guildID, {id, token} = interaction, messageID) {
+    constructor(client, applicationID, commandID, guildID, {id, token} = interaction = {}, messageID) {
         /**
          * @type {import('./../client/Client')}
          */
