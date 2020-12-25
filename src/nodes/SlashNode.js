@@ -94,7 +94,7 @@ class SplashNode {
     guildID;
     interaction;
     messageID;
-    constructor(client, applicationID, commandID, guildID, {id, token} = interaction = {}, messageID) {
+    constructor(client, applicationID, commandID, guildID, interaction, messageID) {
         /**
          * @type {import('./../client/Client')}
          */
@@ -118,7 +118,7 @@ class SplashNode {
         /**
          * @type {?{id: ?string, token: ?string}}
          */
-        this.interaction = {id, token};
+        this.interaction = interaction;
         /**
          * @type {?string}
          */
