@@ -116,9 +116,12 @@ class WebSocket extends EventEmitter {
     this.ws.on('open', (...args) => console.log('event open', ...args));
 
     // Log close and error event
-    this.ws.on('close', (...args) => {
-      console.log('event close', ...args);
+    this.ws.on('close', (code) => {
+      console.log('event close', code);
       this.destroy();
+      if (code == 1001) {
+        this.connect(this.token);
+      };
     });
     this.ws.on('error', (code, reason) => {
       if (code == 1001) {
@@ -169,7 +172,7 @@ class WebSocket extends EventEmitter {
               if (!this.ack) {
                 this.emit('debug', `[SHARD ${this.shardID}] ACK not received, reconnecting ...`);
                 // Close client
-                this.ws.close();
+                this.ws.close(1001);
                 // Log error ACK not reveived
                 console.error(Error('Ack not receive'));
                 // Reconnect to Discord WebSocket
