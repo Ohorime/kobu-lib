@@ -216,7 +216,8 @@ class WebSocket extends EventEmitter {
       case 9:
         /* INVALID SESSION */
         if (json.d) {
-          this.reconnect();
+          this.close();
+          this.connect().then(() => this.reconnect());
         } else {
           console.log('Relogin after 5 seconds');
           setTimeout(() => this.connect(this.token), 5e3);
@@ -224,7 +225,8 @@ class WebSocket extends EventEmitter {
         break;
       case 7:
         /* NEED RECONNECT */
-        this.reconnect();
+        this.close();
+        this.connect().then(() => this.reconnect());
         break;
       default:
         console.log('OP not supported [%s]', json.op, json);
